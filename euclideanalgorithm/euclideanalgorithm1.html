@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Jordan Bell jordan.bell@gmail.com Department of Mathematics, University of Toronto" />
+  <title>The Euclidean algorithm and finite continued fractions</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">The Euclidean algorithm and finite continued fractions</h1>
+<p class="author">Jordan Bell<br />
+<code>jordan.bell@gmail.com</code><br />
+Department of Mathematics, University of Toronto</p>
+</header>
+<h1 id="introduction">Introduction</h1>
+<p>Fowler <span class="citation" data-cites="fowler">(Fowler 1999)</span></p>
+<p>Measure theory of continued fractions: Einsiedler and Ward <span class="citation" data-cites="einsiedler">(Einsiedler and Ward 2010Chapter 3)</span> and Iosifescu and Kraaikamp <span class="citation" data-cites="iosifescu">(Iosifescu and Kraaikamp 2002Chapter 1)</span>.</p>
+<p>In harmonic analysis and dynamical systems, we usually care about infinite continued fractions because we usually care about the Lebesgue measure of a set defined by some conditions on the convergents or partial quotients of a continued fraction. For some questions about functions defined using continued fractions in which we speak about the continuity or differentiability of a particular function, we do indeed care about rational numbers. This paper assembles and comments on the Euclidean algorithm and finite continued fractions in classical Greek and medieval Latin mathematics.</p>
+<h1 id="numbers-and-magnitudes">Numbers and magnitudes</h1>
+<p>Plato, <span><em>Parmenides</em></span> 140b–c <span class="citation" data-cites="cornford">(Cornford 1939, 126)</span>:</p>
+<blockquote>
+<p>Further, the One, being such as we have described, will not be either (a) equal or (b) unequal either to itself or to another.</p>
+<p>If it is equal, it will have the same number of measures as anything to which it is equal. If greater or less, it will have more or fewer measures than things, less or greater than itself, which are commensurable with it. Or, if they are incommensurable with it, it will have smaller measures in the one case, greater in the other.</p>
+</blockquote>
+<p>Allen <span class="citation" data-cites="allen">(Allen 1997, 4:236–41)</span> comments on this passage.</p>
+<p>Aristotle, <span><em>Metaphysics</em></span> D.13, 1020a <span class="citation" data-cites="metaphysica">(Ross 1928)</span>:</p>
+<blockquote>
+<p>‘Quantum’ means that which is divisible into two or more constituent parts of which each is by nature a ‘one’ and a ‘this’ . A quantum is a plurality if it is numerable, a magnitude if it is measurable. ‘Plurality’ means that which is divisible potentially into non-continuous parts, ‘magnitude’ that which is divisible into continuous parts; of magnitude, that which is continuous in one dimension is length, in two breadth, in three depth. Of these, limited plurality is number, limited length is a line, breadth a surface, depth a solid.</p>
+<p>Again, some things are called quanta in virtue of their own nature, others incidentally; e.g. the line is a quantum by its own nature, the musical is one incidentally. Of the things that are quanta by their own nature some are so as substances, e.g. the line is a quantum (for a ‘certain kind of quantum’ is present in the definition which states what it is), and others are modifications and states of this kind of substance, e.g. much and little, long and short, broad and narrow, deep and shallow, heavy and light, and all other such attributes. And also great and small, and greater and smaller, both in themselves and when taken relatively to each other, are by their own nature attributes of what is quantitative; but these names are transferred to other things also. Of things that are quanta incidentally, some are so called in the sense in which it was said that the musical and the white were quanta, viz. because that to which musicalness and whiteness belong is a quantum, and some are quanta in the way in which movement and time are so; for these also are called quanta of a sort and continuous because the things of which these are attributes are divisible. I mean not that which is moved, but the space through which it is moved; for because that is a quantum movement also is a quantum, and because this is a quantum time is one.</p>
+</blockquote>
+<p>Polybius <span><em>Histories</em></span>, Book IV, Chapter 40:</p>
+<blockquote>
+<p>For given infinite time and basins that are limited in volume, it follows that they will eventually be filled, even if silt barely trickles in. After all, it is a natural law that, if a finite quantity goes on and on increasing or decreasing – even if, let us suppose, the amounts involved are tiny – the process will necessarily come to an end at some point within the infinite extent of time.</p>
+</blockquote>
+<p>Plato, <span><em>Laws</em></span> 819</p>
+<p>Diodorus Siculus, 11.25.1 <span class="citation" data-cites="sage">(Sage 1996, 124–25)</span>:</p>
+<blockquote>
+<p>Gelon after his victory honored with gifts not only those cavalry who had killed Hamilcar, but also others who had distinguished themselves in the battle. He put aside the best of the booty to decorate the temples of Syracuse. Of the remainder, he nailed much of it to the most magnificent temples of Himera and the rest along with the captives he distributed to his allies according to the number of their soldiers who had fought with him.</p>
+</blockquote>
+<p>Definition 4 of <span><em>Elements</em></span> V <span class="citation" data-cites="euclidII">(Heath 1956, 114)</span>:</p>
+<blockquote>
+<p>Magnitudes are said to <strong>have a ratio</strong> to one another which are capable, when multiplied, of exceeding one another.</p>
+</blockquote>
+<p>For <span class="math inline">\(x,y \in \mathbb{R}_{&gt; 0}\)</span>, let <span class="math display">\[T(x,y) = \sup(k \in \mathbb{Z}_{\geq 0} : x-ky \geq 0),\]</span> which satisfies <span class="math display">\[x-y &lt; T(x,y) \cdot y \leq x.
+\label{Txy}\]</span></p>
+<p>For <span class="math inline">\(x \in \mathbb{R}_{&gt;0}\)</span>, let <span class="math display">\[\lfloor x \rfloor = \sup(n \in \mathbb{Z} : n \leq x),\]</span> which satisfies <span class="math display">\[x-1 &lt; \lfloor x \rfloor \leq x.\]</span></p>
+<div class="lemma">
+<p><strong>Lemma 1</strong>.  <em>For <span class="math inline">\(x,y \in \mathbb{R}_{&gt;0}\)</span>, <span class="math display">\[T(x,y) = \lfloor x/y \rfloor.\]</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> First, <span class="math inline">\(\lfloor x/y \rfloor \in \mathbb{Z}_{\geq 0}\)</span>. Second, as <span class="math inline">\(\lfloor x/y \rfloor \leq x/y\)</span>, <span class="math display">\[x-\lfloor x/y \rfloor \cdot y \geq x - (x/y) \cdot y = 0.\]</span> Third, if <span class="math inline">\(x-ky \geq 0\)</span> then <span class="math inline">\(k \leq x/y &lt; \lfloor x/y \rfloor + 1\)</span>, and <span class="math inline">\(k &lt; \lfloor x/y \rfloor + 1\)</span> is equivalent to <span class="math inline">\(k \leq \lfloor x/y \rfloor\)</span>. Therefore <span class="math display">\[\lfloor x/y \rfloor = \sup(k \in \mathbb{Z}_{\geq 0} : x-ky \geq 0) = T(x,y).\]</span> ◻</p>
+</div>
+<p>For <span class="math inline">\(x,\mu \in \mathbb{R}_{&gt;0}\)</span>, we say that <span class="math inline">\(\mu\)</span> <strong>measures</strong> <span class="math inline">\(x\)</span> if <span class="math inline">\(x = T(x,\mu) \cdot \mu\)</span>, and write <span class="math inline">\(\mu \mid x\)</span>, and write <span class="math inline">\(\mu \nmid x\)</span> if <span class="math inline">\(\mu\)</span> does not measure <span class="math inline">\(x\)</span>. We say that <span class="math inline">\(x,y \in \mathbb{R}_{&gt;0}\)</span> are <strong>commensurable</strong> if there is some <span class="math inline">\(\mu \in \mathbb{R}_{&gt;0}\)</span> such that <span class="math inline">\(\mu \mid x\)</span> and <span class="math inline">\(\mu \mid y\)</span>, and call <span class="math inline">\(\mu\)</span> a <strong>common measure of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span></strong>. If <span class="math inline">\(\nu\)</span> is a common measure of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> and for any common measure <span class="math inline">\(\mu\)</span> of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> it holds that <span class="math inline">\(\nu \geq \mu\)</span>, we say that <span class="math inline">\(\nu\)</span> is a <strong>greatest common measure of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span></strong>, and write <span class="math inline">\(\nu=\ensuremath\mathrm{gcm}(x,y)\)</span>. For <span class="math inline">\(\mu \in \mathbb{R}_{&gt; 0}\)</span>, <span class="math display">\[(\mu \mid x) \wedge (\mu \mid y) \iff \mu \mid \ensuremath\mathrm{gcm}(x,y).\]</span></p>
+<p>Definitions 1 and 2 of <span><em>Elements</em></span> VII <span class="citation" data-cites="euclidII">(Heath 1956, 277)</span>:</p>
+<blockquote>
+<p>1. An <strong>unit</strong> is that by virtue by which each of the things that exist is called one.</p>
+<p>2. A <strong>number</strong> is a multitude composed of units.</p>
+</blockquote>
+<p>We model numbers by elements of <span class="math inline">\(\mathbb{Z}_{\geq 2}\)</span>. If <span class="math inline">\(p\)</span> is a number then <span class="math inline">\(1 \mid p\)</span>, and if <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> are numbers then <span class="math inline">\(1\)</span> is a common measure of <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>, so any two numbers are commensurable. Definitions 12 and 14 of <span><em>Elements</em></span> VII <span class="citation" data-cites="euclidII">(Heath 1956, 278)</span>:</p>
+<blockquote>
+<p>12. Numbers <strong>prime to one another</strong> are those which are measured by an unit alone as a common measure.</p>
+<p>14. Numbers <strong>composite to one another</strong> are those which are measured by some number as a common measure.</p>
+</blockquote>
+<h1 id="anthyphaeresis">Anthyphaeresis</h1>
+<p>Aristotle, <span><em>Topics</em></span> VIII.3, 158b29–35 <span class="citation" data-cites="LCL335">(Thomas 1991, 506–7)</span>:</p>
+<blockquote>
+<p>It would seem that in mathematics also some things are not easily proved by lack of a definition, such as the proposition that the straight line parallel to the side which cuts the plane divides in the same way both the line and the area. But when the definition is stated, what was stated becomes immediately clear. For the areas and the lines have the same <span><em>alternating subtraction</em></span> (<span><em>antanairesis</em></span>); and this is the definition of the same proportion.</p>
+</blockquote>
+<p>Alexander of Aphrodisias, <span><em>On the Topics</em></span>, VIII.3:</p>
+<blockquote>
+<p>For likewise when this is stated it is not obvious; but when the definition of proportion is enunciated it becomes obvious that both the line and the area are cut in the same proportion by the line drawn parallel. For the definition of proportions which those of old time used is this: Magnitudes which have the same <span><em>alternating subtraction</em></span> (<span><em>anthyphairesis</em></span>) are proportional. But he has called <span><em>anthyphairesis</em></span> <span><em>antanairesis</em></span>.</p>
+</blockquote>
+<p>Fowler <span class="citation" data-cites="fowler">(Fowler 1999)</span> is a comprehensive summary of Greek writings about ratios and anthyphaeresis. In Fowler’s formalization, for magnitudes <span class="math inline">\(x,y, x&gt;y\)</span>, the <strong>anthyphaeresis</strong> of the ratio <span class="math inline">\(x:y\)</span> is the sequence <span class="math inline">\(a_n\)</span> formed when applying the Euclidean algorithm with <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+<p>Mendell <span class="citation" data-cites="mendell">(Mendell 2007)</span></p>
+<h1 id="the-euclidean-algorithm">The Euclidean algorithm</h1>
+<p>Weil <span class="citation" data-cites="weil">(Weil 1984, 5, Chap. I, §II)</span>:</p>
+<blockquote>
+<p>Was there originally a relation between the so-called “Euclidean algorithm,” as described in <span><em>Eucl.</em></span>VII.1–2, for finding the g.c.d. of two integers, and the theory of the same process (<span><em>Eucl.</em></span>X.2) as it applies to possibly incommensurable magnitudes? Has it not often happened that a mathematical process has been discovered twice, in different contexts, long before the substantial identity between the two discoveries came to be perceived? Some of the major advances in mathematics have occured just in this manner.</p>
+</blockquote>
+<p>In his introduction to Book V of Euclid’s <span><em>Elements</em></span>, Heath says the following <span class="citation" data-cites="euclidII">(Heath 1956, 113)</span>:</p>
+<blockquote>
+<p>It is a remarkable fact that the theory of proportions is twice treated in Euclid, in Book V. with reference to magnitudes in general, and in Book VII. with reference to the particular case of numbers. The latter exposition referring only to commensurables may be taken to represent fairly the theory of proportions at the stage which it had reached before the great extension of it made by Eudoxus.</p>
+</blockquote>
+<p>In this paper we talk only about using the Euclidean algorithm with commensurable magnitudes, equivalently, about finite continued fractions. This gives us a chance to become familiar with the Euclidean algorithm just as it occurs in <span><em>Elements</em></span> VII.1–2, rather than in <span><em>Elements</em></span> VII.1–2 and <span><em>Elements</em></span> X.2–3 together. A study of the Euclidean algorithm for not necessarily commensurable magnitudes should involve the following.</p>
+<ol>
+<li><p>The regular polygons in <span><em>Elements</em></span> IV,VI.30,XII.1,XIII.1–12, XIII.18.</p></li>
+<li><p>The classification of incommensurable lines in <span><em>Elements</em></span> X, for which see e.g. Taisbak <span class="citation" data-cites="quadrangles">(Taisbak 1982)</span> and the commentary of Pappus of Alexandria <span class="citation" data-cites="pappusX">(Thomson and Junge 1930)</span>.</p></li>
+<li><p>Methods for approximating square roots in works like Heron’s <span><em>Metrica</em></span> <span class="citation" data-cites="metrica">(Acerbi and Vitrac 2014)</span>, Archimedes’ <span><em>Measurement of a Circle</em></span>, and Ptolemy’s <span><em>Almagest</em></span> <span class="citation" data-cites="almagest">(Toomer 1984)</span>.</p></li>
+<li><p>Solving Pell’s equation as in Diophantus, <span><em>Arithmetica</em></span>, Lemma to VI.15 <span class="citation" data-cites="diophantus">(Heath 1964, 238)</span>, and side and diagonal numbers as in Proclus, <span><em>Commentary on Plato’s Republic</em></span> <span class="citation" data-cites="festugiereII">(Festugière 1970, 133–35)</span> and Theon of Smyrna, <span><em>Expositio rerum mathematicarum ad legendum Platonem utilium</em></span> I.XXXI <span class="citation" data-cites="dupuis">(Dupuis 1892, 70–75)</span>.</p></li>
+<li><p>Magnitudes and ratios, for which see Knorr <span class="citation" data-cites="knorr1982">(Knorr 1982)</span> on Egyptian and Greek fractions, Larsen <span class="citation" data-cites="larsen">(Larsen 1984)</span> and Thorup <span class="citation" data-cites="thorup">(Thorup 1992)</span> on pre-Euclidean theories of proportions, Grattan-Guinness <span class="citation" data-cites="grattan">(Grattan-Guinness 1996)</span> for a discussion of numbers, magnitudes and ratios in the <span><em>Elements</em></span>, Murdoch <span class="citation" data-cites="murdoch">(Murdoch 1963)</span> for Latin writers, and Plooij <span class="citation" data-cites="plooij">(Plooij 1950)</span> and Hogendijk <span class="citation" data-cites="hogendijk">(Hogendijk 2002)</span> for Arabic writers</p></li>
+<li><p>Infinite divisibility and Zeno’s paradoxes, and philosophical writing about the infinite like in Aristotle’s <span><em>Physics</em></span> and <span><em>Metaphysics</em></span>, for which see Heath <span class="citation" data-cites="aristotle">(Heath 1949)</span> and commentary by Beere <span class="citation" data-cites="beere">(Beere 2012, 127–29)</span> on anthyphaeresis.</p></li>
+<li><p>Music theory, for which see Huffman <span class="citation" data-cites="philolaus">(Huffman 2006)</span> and Barker <span class="citation" data-cites="barker">(Barker 2004)</span>, especially making sense of the notion of semitone, e.g., Censorinus, <span><em>De Dei Natali</em></span> 10.7 <span class="citation" data-cites="censorinus">(Parker 2007, 18)</span>: according to Aristoxenus the octave is 6 tones, while according to the Pythagoreans the octave is 5 tones and 2 semitones, “so Pythagoras and the mathematicians, who pointed out that two semi-tones do not necessarily add up to a full tone.”</p></li>
+<li><p>Astronomy and calendars, for which see Neugebauer <span class="citation" data-cites="neugebauer">(Neugebauer 1975)</span>.</p></li>
+</ol>
+<div class="proof">
+<p><em>The Euclidean algorithm.</em> Let <span class="math inline">\(x,y \in \mathbb{R}_{&gt;0}\)</span> be commensurable, with <span class="math inline">\(x&gt;y\)</span>: there is some <span class="math inline">\(\mu \in \mathbb{R}_{&gt;0}\)</span> and some <span class="math inline">\(p,q \in \mathbb{Z}_{\geq 1}\)</span> such that <span class="math inline">\(x=p\cdot \mu\)</span> and <span class="math inline">\(y = q \cdot \mu\)</span>, <span class="math inline">\(p&gt;q\)</span>.</p>
+<p>Define <span class="math display">\[v_0=p, \quad v_1=q.\]</span> Define <span class="math display">\[a_0=T(v_0,v_1),\quad v_2 = v_0-a_0v_1.\]</span> From <a href="#Txy" data-reference-type="eqref" data-reference="Txy">[Txy]</a> we know <span class="math inline">\(v_0-v_1&lt;T(v_0,v_1) \cdot v_1 \leq v_0\)</span>, whence <span class="math display">\[0 \leq v_2 &lt; v_1.\]</span> For <span class="math inline">\(m \geq 2\)</span>, if <span class="math inline">\(v_m &gt; 0\)</span> then define <span class="math display">\[a_{m-1} =T(v_{m-1},v_m),\quad v_{m+1} = v_{m-1} - a_{m-1} v_m.\]</span> From <a href="#Txy" data-reference-type="eqref" data-reference="Txy">[Txy]</a> we know <span class="math inline">\(v_{m-1}-v_m&lt;T(v_{m-1},v_m) \cdot v_m \leq v_{m-1}\)</span>, whence <span class="math display">\[0 \leq v_{m+1} &lt; v_m.\]</span> Because <span class="math inline">\(v_0,v_1,v_2,\ldots\)</span> is a strictly decreasing sequence of nonnegative integers, there is some <span class="math inline">\(N \geq 2\)</span> for which <span class="math display">\[v_N &gt; 0,\qquad v_{N+1}=0.\]</span> Thus for <span class="math inline">\(0 \leq m \leq N-1\)</span>, <span class="math display">\[a_m = T(v_m,v_{m+1}),\quad v_m = a_m v_{m+1} + v_{m+2},
+\label{am}\]</span> and <span class="math display">\[v_{N+1} &lt; v_N &lt; \cdots &lt; v_1 &lt; v_0,\]</span> with <span class="math display">\[v_0=p,\quad v_1=q,\quad v_{N+1}=0.\]</span> ◻</p>
+</div>
+<div class="theorem">
+<p><strong>Theorem 2</strong>.  <em>For <span class="math inline">\(p&gt;q\)</span>, <span class="math display">\[v_N=\gcd(p,q).\]</span></em></p>
+</div>
+<div class="proof">
+<p><em>Proof.</em> For <span class="math inline">\(d \in \mathbb{Z}_{\geq 1}\)</span>, say <span class="math inline">\(d \mid \gcd(p,q)\)</span>, and so <span class="math inline">\(d \mid v_0\)</span> and <span class="math inline">\(d \mid v_1\)</span>. For <span class="math inline">\(0 \leq m \leq N-1\)</span>, suppose that <span class="math inline">\(d \mid v_m\)</span> and <span class="math inline">\(d \mid v_{m+1}\)</span>. Then using <a href="#am" data-reference-type="eqref" data-reference="am">[am]</a> we get <span class="math inline">\(d \mid v_{m+2}\)</span>. By induction, for each <span class="math inline">\(0 \leq m \leq N-1\)</span> it holds that <span class="math inline">\(d \mid v_m\)</span> and <span class="math inline">\(d \mid v_{m+1}\)</span>. In particular, for <span class="math inline">\(m=N-1\)</span> it holds that <span class="math inline">\(d \mid v_N\)</span>.</p>
+<p>Say <span class="math inline">\(d \mid v_N\)</span>. By <a href="#am" data-reference-type="eqref" data-reference="am">[am]</a> we have <span class="math inline">\(v_{N-1} = a_{N-1} v_N + v_{N+1}\)</span>, and by definition of <span class="math inline">\(N\)</span> we have <span class="math inline">\(v_{N+1} = 0\)</span>, whence <span class="math inline">\(d \mid v_{N-1}\)</span>. For <span class="math inline">\(0 \leq m \leq N-1\)</span>, suppose that <span class="math inline">\(d \mid v_{N-m}\)</span> and <span class="math inline">\(d \mid v_{N-1-m}\)</span>. By <a href="#am" data-reference-type="eqref" data-reference="am">[am]</a> we have <span class="math display">\[v_{N-1-m} = a_{N-1-m} v_{N-m} + v_{N-m+1},\]</span> from which we get <span class="math inline">\(d \mid v_{N-m+1}\)</span>. By induction, for each <span class="math inline">\(0 \leq m \leq N-1\)</span> it holds that <span class="math inline">\(d \mid v_{N-m}\)</span> and <span class="math inline">\(d \mid v_{N-1-m}\)</span>. In particular, for <span class="math inline">\(m=N-1\)</span> we get <span class="math inline">\(d \mid v_1\)</span> and <span class="math inline">\(d \mid v_0\)</span>, which means <span class="math inline">\(d \mid \gcd(p,q)\)</span>. We have established that for <span class="math inline">\(d \in \mathbb{Z}_{\geq 1}\)</span>, <span class="math inline">\(d \mid \gcd(p,q)\)</span> if and only if <span class="math inline">\(d \mid v_N\)</span>, which proves the claim. ◻</p>
+</div>
+<div class="proof">
+<p><em>Example.</em> For example, let <span class="math inline">\(p=60\)</span>, <span class="math inline">\(q=26\)</span>, cf. Fowler <span class="citation" data-cites="fowler">(Fowler 1999, 25–28)</span>. Then <span class="math display">\[v_0=60,\quad v_1=26.\]</span> Then <span class="math display">\[a_0 = T(v_0,v_1) = T(60,26) = 2\]</span> and <span class="math display">\[v_2 = v_0 - a_0v_1 = 60-2 \cdot 26 = 8.\]</span> Then <span class="math display">\[a_1 = T(v_1,v_2) = T(26,8)=3\]</span> and <span class="math display">\[v_3 = v_1 - a_1v_2 = 26 - 3 \cdot 8 = 2.\]</span> Then <span class="math display">\[a_2 = T(v_2,v_3) = T(8,2) =4\]</span> and <span class="math display">\[v_4 = v_2 - a_2v_3 = 8 - 4\cdot 2 = 0.\]</span></p>
+<p>As <span class="math inline">\(v_0 = a_0v_1 + v_2\)</span>, <span class="math display">\[v_0:v_1 = a_0 + v_2 : v_1.\]</span> As <span class="math inline">\(v_1 = a_1v_2 + v_3\)</span>, <span class="math display">\[v_1:v_2 = a_1 + v_3:v_2.\]</span> As <span class="math inline">\(v_2 = a_2v_3 + v_4\)</span>, <span class="math display">\[v_2:v_3 = a_2 + v_4:v_3.\]</span> Thus, as <span class="math inline">\(v_4=0\)</span>, <span class="math display">\[\begin{aligned}
+v_0:v_1 &amp;=a_0+v_2:v_1\\
+&amp;=a_0+(v_1:v_2)^{-1}\\
+&amp;=a_0+(a_1+v_3:v_2)^{-1}\\
+&amp;=a_0+(a_1+(v_2:v_3)^{-1})^{-1}\\
+&amp;=a_0+(a_1+(a_2+v_4:v_3)^{-1})^{-1}\\
+&amp;=a_0+(a_1+a_2^{-1})^{-1},\end{aligned}\]</span> that is, <span class="math display">\[60:26 = (2+(3+4^{-1})^{-1})^{-1}.\]</span> ◻</p>
+</div>
+<p>We can write <a href="#am" data-reference-type="eqref" data-reference="am">[am]</a>, <span class="math display">\[v_m = a_m v_{m+1} + v_{m+2},\]</span> using matrices: <span class="math display">\[\begin{pmatrix} 0&amp;1\\1&amp;-a_m\end{pmatrix} \begin{pmatrix} v_m\\v_{m+1} \end{pmatrix}
+=\begin{pmatrix} v_{m+1}\\v_{m+2}\end{pmatrix},
+\label{amvm}\]</span> with <span class="math inline">\(a_m=T(v_m,v_{m+1})\)</span>, for <span class="math inline">\(0 \leq m \leq N-1\)</span>. For <span class="math inline">\(0 \leq n \leq N-1\)</span>, <span class="math display">\[\left[ \prod_{m=0}^n\begin{pmatrix} 0&amp;1\\1&amp;-a_m\end{pmatrix}\right]  \begin{pmatrix} v_0\\v_1\end{pmatrix} 
+=\begin{pmatrix}v_{n+1}\\v_{n+2}\end{pmatrix},\]</span> in particular, for <span class="math inline">\(n=N-1\)</span> and as <span class="math inline">\(v_{N+1}=0\)</span>, <span class="math display">\[\left[ \prod_{m=0}^{N-1} \begin{pmatrix} 0&amp;1\\1&amp;-a_m\end{pmatrix}\right]  \begin{pmatrix} v_0\\v_1\end{pmatrix} 
+=\begin{pmatrix}v_N\\0\end{pmatrix}.\]</span></p>
+<p>For <span class="math inline">\(0 \leq n \leq N-1\)</span>, using <a href="#amvm" data-reference-type="eqref" data-reference="amvm">[amvm]</a> and <span class="math display">\[\begin{pmatrix} 0&amp;1\\1&amp;-a_m\end{pmatrix}^{-1}
+=\begin{pmatrix}a_m&amp;1\\1&amp;0\end{pmatrix}\]</span> we get <span class="math display">\[\begin{pmatrix}a_m&amp;1\\1&amp;0\end{pmatrix} \begin{pmatrix} v_{m+1}\\v_{m+2}\end{pmatrix} = \begin{pmatrix} v_m\\v_{m+1} \end{pmatrix}.\]</span> Define <span class="math display">\[\begin{pmatrix}p_n&amp;p_{n-1}\\
+q_n&amp;q_{n-1}
+\end{pmatrix}
+= \begin{pmatrix} a_0&amp;1\\1&amp;0\end{pmatrix} \cdots  \begin{pmatrix} a_n&amp;1\\1&amp;0\end{pmatrix}
+=\prod_{m=0}^n  \begin{pmatrix} a_m&amp;1\\1&amp;0\end{pmatrix},
+\label{pnqn}\]</span> so <span class="math display">\[\begin{pmatrix}p_n&amp;p_{n-1}\\
+q_n&amp;q_{n-1}
+\end{pmatrix}
+=\begin{pmatrix}p_{n-1}&amp;p_{n-2}\\
+q_{n-1}&amp;q_{n-2}
+\end{pmatrix}
+ \begin{pmatrix} a_n&amp;1\\1&amp;0\end{pmatrix},\]</span> yielding <span class="math display">\[\begin{pmatrix} p_n \\ q_n \end{pmatrix}
+=\begin{pmatrix}a_n p_{n-1} + p_{n-2}\\
+a_nq_{n-1}+q_{n-2}
+\end{pmatrix}.\]</span> Now, <span class="math display">\[\begin{pmatrix}p_0&amp;p_{-1}\\
+q_0&amp;q_{-1}
+\end{pmatrix}
+=\begin{pmatrix}a_0&amp;1\\
+1&amp;0
+\end{pmatrix}\]</span> and <span class="math display">\[\begin{pmatrix}p_1&amp;p_0\\
+q_1&amp;q_0
+\end{pmatrix}
+=\begin{pmatrix}a_0&amp;1\\
+1&amp;0
+\end{pmatrix}\begin{pmatrix}a_1&amp;1\\
+1&amp;0
+\end{pmatrix}
+=\begin{pmatrix}
+a_0a_1+1&amp;a_0\\
+a_1&amp;1
+\end{pmatrix}.\]</span> We have <span class="math display">\[\begin{pmatrix}
+v_0\\
+v_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+p_n&amp;p_{n-1}\\
+q_n&amp;q_{n-1}
+\end{pmatrix}
+\begin{pmatrix}
+v_{n+1}\\
+v_{n+2}
+\end{pmatrix},\]</span> so for <span class="math inline">\(n=N-1\)</span>, as <span class="math inline">\(v_0=p\)</span>, <span class="math inline">\(v_1=q\)</span>, <span class="math inline">\(v_N=\ensuremath\mathrm{gcm}(p,q)\)</span>, <span class="math inline">\(v_{N+1}=0\)</span>, <span class="math display">\[\begin{pmatrix}
+p\\
+q
+\end{pmatrix}
+=\begin{pmatrix}
+p_{N-1}&amp;p_{N-2}\\
+q_{N-1}&amp;q_{n-2}
+\end{pmatrix}
+\begin{pmatrix}
+v_N\\
+0
+\end{pmatrix}
+=\begin{pmatrix} v_N p_{N-1}\\
+v_N q_{N-1}
+\end{pmatrix}.
+\label{pq}\]</span> Taking determinants of <a href="#pnqn" data-reference-type="eqref" data-reference="pnqn">[pnqn]</a>, <span class="math display">\[p_nq_{n-1}-p_{n-1}q_n = (-1)^{n+1}.
+\label{determinant}\]</span> For <span class="math inline">\(n=N-1\)</span>, <a href="#pq" data-reference-type="eqref" data-reference="pq">[pq]</a> and <a href="#determinant" data-reference-type="eqref" data-reference="determinant">[determinant]</a> we get <span class="math display">\[p q_{N-2} - qp_{N-2} = (-1)^N v_N.
+\label{linear}\]</span> Finally, <a href="#determinant" data-reference-type="eqref" data-reference="determinant">[determinant]</a> tells us <span class="math display">\[\frac{p_n}{q_n} -  \frac{p_{n-1}}{q_{n-1}} = \frac{(-1)^{n+1}}{q_{n-1} q_n},\]</span> thus by <a href="#pq" data-reference-type="eqref" data-reference="pq">[pq]</a>, <span class="math display">\[\frac{p}{q} -  \frac{p_{n-1}}{q_{n-1}} 
+=\sum_{m=n}^{N-1}  \frac{(-1)^{m+1}}{q_{m-1} q_m}.\]</span></p>
+<p>Christianidis <span class="citation" data-cites="christianidis">(Christianidis 1994)</span> surveys occurences of linear indeterminate equations in Greek mathematics.</p>
+<p>The formula <a href="#linear" data-reference-type="eqref" data-reference="linear">[linear]</a> shows a connection of the Euclidean algorithm with the <strong>kuttaka algorithm</strong> of Aryabhata and Bhaskara I for determining, given positive integers <span class="math inline">\(a,b,c\)</span>, those positive integers <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> such that <span class="math display">\[ax-by=c.\]</span> See Datta and Singh <span class="citation" data-cites="hindu">(Datta and Singh 1962II, pp. 87–125, §13)</span>, Heath <span class="citation" data-cites="diophantus">(Heath 1964, 281–85)</span>, and Neugebauer <span class="citation" data-cites="neugebauer">(Neugebauer 1975, 1:1117–20, VI C 4, 2)</span>.</p>
+<h1 id="elements-vii.13"><span><em>Elements</em></span> VII.1–3</h1>
+<p>Mueller <span class="citation" data-cites="mueller">(Mueller 2006, 11)</span> explains the format of the propositions in the <span><em>Elements</em></span>. A usual proposition has the format <span><em>protasis</em></span>, <span><em>ekthesis</em></span>, <span><em>diorismos</em></span>, <span><em>kataskeuē</em></span>, <span><em>apodeixis</em></span>, and <span><em>sumperasma</em></span>. The <span><em>protasis</em></span> is the statement of the proposition. The <span><em>ekthesis</em></span> instantiates typical objects that are going to be worked with. The <span><em>diorismos</em></span> asserts that to prove the proposition it suffices to prove something about the instantiated objects. The <span><em>kataskeuē</em></span> constructs things using the instantiated object. The <span><em>apodeixis</em></span> proves the claim of the <span><em>diorismos</em></span>. The <span><em>sumperasma</em></span> asserts that the proposition is proved by what has been done with the instantiated objects.</p>
+<p>Euclid, <span><em>Elements</em></span> VII.1 <span class="citation" data-cites="euclidII">(Heath 1956, 296)</span>:</p>
+<blockquote>
+<p>Two unequal numbers being set out, and the less being continually subtracted in turn from the greater, if the number which is left never measures the one before it until an unit is left, the original numbers will be prime to one another.</p>
+</blockquote>
+<div class="proof">
+<p><em>Proof.</em> Let <span class="math inline">\(AB,CD \in \mathbb{Z}_{\geq 2}\)</span> with <span class="math inline">\(AB&gt;CD\)</span>, and suppose that when the less is continually subtracted in turn from the greater, the number that is left never measures the one before it until a unit is left. Suppose by contradiction that the numbers are not relatively prime, with <span class="math inline">\(E=\ensuremath\mathrm{gcm}(AB,CD) \in \mathbb{Z}_{\geq 2}\)</span>. Let <span class="math display">\[AB = AF+FB = AF + T(AB,CD) \cdot CD,
+\label{AB}\]</span> with <span class="math inline">\(AF&lt;CD\)</span>. Euclid uses without statement that <span class="math inline">\(AF&gt;1\)</span>. Let <span class="math display">\[CD = CG+GD = CG + T(CD,AF) \cdot AF,
+\label{CD}\]</span> with <span class="math inline">\(CG&lt;AF\)</span>. Euclid uses without statement that <span class="math inline">\(CG&gt;1\)</span>. Let <span class="math display">\[AF = AH + HF = AH + T(AF,CG) \cdot CG,
+\label{AF}\]</span> with <span class="math inline">\(AH&lt;CG\)</span>. Euclid then declares that <span class="math inline">\(AH=1\)</span>. Now, because <span class="math inline">\(E \mid AB\)</span> and <span class="math inline">\(E \mid CD\)</span>, using <a href="#AB" data-reference-type="eqref" data-reference="AB">[AB]</a> it follows that <span class="math inline">\(E \mid AF\)</span>. Because <span class="math inline">\(E \mid CD\)</span> and <span class="math inline">\(E \mid AF\)</span>, using <a href="#CD" data-reference-type="eqref" data-reference="CD">[CD]</a> it follows that <span class="math inline">\(E \mid CG\)</span>. Because <span class="math inline">\(E \mid AF\)</span> and <span class="math inline">\(E \mid CG\)</span>, using <a href="#AF" data-reference-type="eqref" data-reference="AF">[AF]</a> it follows that <span class="math inline">\(E \mid AH\)</span>. But <span class="math inline">\(AH=1\)</span> and <span class="math inline">\(E \in \mathbb{Z}_{\geq 2}\)</span>, so this is false. Therefore the numbers <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span> are relatively prime. ◻</p>
+</div>
+<p><span><em>Elements</em></span> VII.1 is translated and briefly commented on by Burnyeat <span class="citation" data-cites="burnyeat">(Burnyeat 2000, 29–31)</span>, in an essay about why Plato encouraged studying mathematics.</p>
+<p>Euclid, <span><em>Elements</em></span> VII.2 <span class="citation" data-cites="euclidII">(Heath 1956, 298)</span>:</p>
+<blockquote>
+<p>Given two numbers not prime to one another, to find their greatest common measure.</p>
+</blockquote>
+<div class="proof">
+<p><em>Proof.</em> Let <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span> be numbers that are not relatively prime, with <span class="math inline">\(AB&gt;CD\)</span>. If <span class="math inline">\(CD \mid AB\)</span> then <span class="math inline">\(\ensuremath\mathrm{gcm}(AB,CD)=CD\)</span>.</p>
+<p>If <span class="math inline">\(CD \nmid AB\)</span>, let <span class="math display">\[AB = AE+EB = AE + T(AB,CD) \cdot CD,
+\label{AB2}\]</span> with <span class="math inline">\(AE&lt;CD\)</span>. As <span class="math inline">\(CD \nmid AB\)</span>, <span class="math inline">\(AE \neq 0\)</span>, and if <span class="math inline">\(AE = 1\)</span> then by <span><em>Elements</em></span> VII.1 it follows that <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span> are relatively prime, contrary to what has been assumed. Therefore <span class="math inline">\(AE \in \mathbb{Z}_{\geq 2}\)</span>. Furthermore, because <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span> have some common measure <span class="math inline">\(\mu \in \mathbb{Z}_{\geq 2}\)</span>, by <a href="#AB2" data-reference-type="eqref" data-reference="AB2">[AB2]</a> this <span class="math inline">\(\mu\)</span> is a common measure of <span class="math inline">\(CD\)</span> and <span class="math inline">\(AE\)</span>. Let <span class="math display">\[CD = CF + FD = CF + T(CD,AE)\cdot AE.
+\label{CD2}\]</span> Euclid uses without statement that <span class="math inline">\(CF \neq 0\)</span>. If <span class="math inline">\(CF = 1\)</span> then by <span><em>Elements</em></span> VII.1, <span class="math inline">\(CD\)</span> and <span class="math inline">\(AE\)</span> are relatively prime, contradicting that <span class="math inline">\(\mu \in \mathbb{Z}_{\geq 2}\)</span> is a common measure of them. Euclid then declares that <span class="math inline">\(CF \mid AE\)</span>. Now, by <a href="#CD2" data-reference-type="eqref" data-reference="CD2">[CD2]</a> we have <span class="math display">\[FD = T(CD,AE) \cdot AE,\]</span> so <span class="math inline">\(AE \mid FD\)</span>, and with <span class="math inline">\(CF \mid AE\)</span> this implies <span class="math inline">\(CF \mid FD\)</span>. But <span class="math inline">\(CF+FD = CD\)</span>, and because <span class="math inline">\(CF \mid FD\)</span> and <span class="math inline">\(CF \mid CF\)</span> we get <span class="math inline">\(CF \mid CD\)</span>. But by <a href="#AB2" data-reference-type="eqref" data-reference="AB2">[AB2]</a>, <span class="math display">\[EB = T(AB,CD) \cdot CD,\]</span> so <span class="math inline">\(CD \mid EB\)</span>, and with <span class="math inline">\(CF \mid CD\)</span> this implies <span class="math inline">\(CF \mid EB\)</span>. Therefore, <span class="math inline">\(CF \mid EB\)</span> and <span class="math inline">\(CF \mid AE\)</span>, and with <span class="math inline">\(AB = AE+EB\)</span> this implies <span class="math inline">\(CF \mid AB\)</span>. Therefore, <span class="math inline">\(CF \mid AB\)</span> and <span class="math inline">\(CF \mid CD\)</span>, namely <span class="math inline">\(CF\)</span> is a common measure of <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span>.</p>
+<p>Now suppose by contradiction that <span class="math inline">\(CF\)</span> is not the greatest common measure of <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span>. Then there is some <span class="math inline">\(G \in \mathbb{Z}_{\geq 2}\)</span> with <span class="math inline">\(G&gt;CF\)</span> that is a common measure of <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span>. Because <span class="math inline">\(G \mid CD\)</span> and <span class="math inline">\(CD \mid EB\)</span>, we get <span class="math inline">\(G \mid EB\)</span>. But <span class="math inline">\(AB = AE + EB\)</span>, and <span class="math inline">\(G \mid AB\)</span> by hypothesis, so it follows that <span class="math inline">\(G \mid AE\)</span>. Now, <span class="math inline">\(AE \mid FD\)</span>, so <span class="math inline">\(G \mid FD\)</span>. And <span class="math inline">\(CD = CF + FD\)</span>, so <span class="math inline">\(G \mid FD\)</span> and <span class="math inline">\(G \mid CD\)</span> together imply <span class="math inline">\(G \mid CF\)</span>. This means that the greater measures the less, which is false. Therefore there is no number greater than <span class="math inline">\(CF\)</span> that measures both <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span>, which means that <span class="math inline">\(CF\)</span> is the greatest common measure of <span class="math inline">\(AB\)</span> and <span class="math inline">\(CD\)</span>. ◻</p>
+</div>
+<p>The Porism to <span><em>Elements</em></span> VII.2 states, “From this it is manifest that, if a number measure two numbers, it will also measure their greatest common measure.”</p>
+<p>Proclus, <span><em>Commentary on the First Book of Euclid’s Elements</em></span> 301–302 <span class="citation" data-cites="proclus">(Morrow 1992, 236)</span>, calls determining the greatest common measure of two commensurable magnitudes a “porism”:</p>
+<blockquote>
+<p>“Porism” is a geometrical term and has two meanings. We call “porism” a theorem whose establishment is an incidental result of the proof of another theorem, a lucky find as it were, or a bonus for the inquirer. Also called “porisms” are problems whose solution requires discovery, not merely construction or simple theory. We must see that the angles at the base of an isosceles triangle are equal, and our knowledge in such cases is about already existing things. Bisecting an angle, constructing a triangle, taking away or adding a length – all these require us to make something. But to find the center of a given circle, or the greatest common measure of two given commensurable magnitudes, and the like – these lie in a sense between problems and theorems. For in these inquiries there is no construction of the things sought, but a finding of them. Nor is the procedure purely theoretical; for it is necessary to bring what is sought into view and exhibit it before the eyes. Such are the porisms that Euclid composed and arranged in three books.</p>
+</blockquote>
+<p>cf. <span><em>Commentary</em></span> 278 <span class="citation" data-cites="proclus">(Morrow 1992, 217)</span>. Pappus of Alexandria, <span><em>Collection</em></span> VII.14 <span class="citation" data-cites="pappus7">(Jones 1986, 8:96)</span>:</p>
+<blockquote>
+<p>That the ancients best knew the distinction between these three things, is clear from their definitions. For they said that a theorem is what is offered for proof of what is offered, a problem what is proposed for construction of what is offered, a porism what is offered for the finding of what is offered.</p>
+</blockquote>
+<p>Euclid, <span><em>Elements</em></span> VII.3 <span class="citation" data-cites="euclidII">(Heath 1956, 300)</span>:</p>
+<blockquote>
+<p>Given three numbers not prime to one another, to find their greatest common measure.</p>
+</blockquote>
+<div class="proof">
+<p><em>Proof.</em> Let <span class="math inline">\(A,B,C\)</span> be numbers that are not relatively prime. By <span><em>Elements</em></span> VII.2, let <span class="math inline">\(D\)</span> be the greatest common measure of <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Either <span class="math inline">\(D \mid C\)</span> or <span class="math inline">\(D \nmid C\)</span>. In the first case, <span class="math inline">\(D \mid C\)</span> and then <span class="math inline">\(D\)</span> measures each of <span class="math inline">\(A,B,C\)</span>, hence is a common measure of <span class="math inline">\(A,B,C\)</span>. Suppose by contradiction that there is some number <span class="math inline">\(E\)</span> that is a common measure of <span class="math inline">\(A,B,C\)</span> such that <span class="math inline">\(E&gt;D\)</span>. As <span class="math inline">\(E\)</span> measures each of <span class="math inline">\(A,B\)</span>, by <span><em>Elements</em></span> VII.2, Porism <span class="math inline">\(E\)</span> measures their greatest common measure <span class="math inline">\(D\)</span>. But then the greater measures the less, which is false. Therefore <span class="math inline">\(D\)</span> is the greatest common measure of <span class="math inline">\(A,B,C\)</span>.</p>
+<p>In the second case, <span class="math inline">\(D \nmid C\)</span>. Because <span class="math inline">\(A,B,C\)</span> are not relatively prime, some number <span class="math inline">\(M \in \mathbb{Z}_{\geq 2}\)</span> is their common measure. This number measures <span class="math inline">\(A,B\)</span> hence by <span><em>Elements</em></span> VII.2, Porism measures the greatest common measure <span class="math inline">\(D\)</span> of <span class="math inline">\(A,B\)</span>. But <span class="math inline">\(M \mid C\)</span> and <span class="math inline">\(M \mid D\)</span> shows, as <span class="math inline">\(M \in \mathbb{Z}_{\geq 2}\)</span>, that <span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span> are not relatively prime. By <span><em>Elements</em></span> VII.2, let <span class="math inline">\(E\)</span> be the greatest common measure of <span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span>. Because <span class="math inline">\(E \mid D\)</span> and <span class="math inline">\(D \mid A\)</span> it follows that <span class="math inline">\(E \mid A\)</span>, and because <span class="math inline">\(E \mid D\)</span> and <span class="math inline">\(D \mid B\)</span> it follows that <span class="math inline">\(E \mid B\)</span>. But also <span class="math inline">\(E \mid C\)</span>, so <span class="math inline">\(E\)</span> is a common measure of <span class="math inline">\(A,B,C\)</span>. Suppose by contradiction that <span class="math inline">\(E\)</span> is not the greatest common measure of <span class="math inline">\(A,B,C\)</span>, so there is a number <span class="math inline">\(F\)</span> that is a common measure of <span class="math inline">\(A,B,C\)</span> with <span class="math inline">\(F&gt;E\)</span>. Because <span class="math inline">\(F\)</span> measures <span class="math inline">\(A,B,C\)</span>, it measures <span class="math inline">\(A,B\)</span> and hence by <span><em>Elements</em></span> VII.2, Porism we get that <span class="math inline">\(F\)</span> measures the greatest common measure of <span class="math inline">\(A,B\)</span>, i.e. <span class="math inline">\(F \mid D\)</span>. But also <span class="math inline">\(F \mid C\)</span>, and because <span class="math inline">\(F\)</span> measures <span class="math inline">\(C,D\)</span>, by <span><em>Elements</em></span> VII.2, Porism we have that <span class="math inline">\(F\)</span> measures the greatest common measure of <span class="math inline">\(C,D\)</span>, that is <span class="math inline">\(F \mid E\)</span>. But then the greater measures the less, which is false, showing that <span class="math inline">\(E\)</span> is the greatest common measure of <span class="math inline">\(A,B,C\)</span>. ◻</p>
+</div>
+<p>Aristotle writes about generalization from a chance case in <span><em>Posterior Analytics</em></span>, A.4, 73b32f.</p>
+<p>On induction in Euclid, see Mueller <span class="citation" data-cites="mueller">(Mueller 2006, 68–69)</span> and Itard <span class="citation" data-cites="itard">(Itard 1961)</span>. Itard <span class="citation" data-cites="itard">(Itard 1961, X:73)</span> writes:</p>
+<blockquote>
+<p>Cependant on peut trouver quelques démonstrations par récurrence ou induction complète. On ne trouvera jamais le leitmotiv moderne, un peu pédant: « nous avons vérifié la propriété pour 2, nous avons montré que si elle est vraie pour un nombre, elle est vraie pour son suivant, donc elle est générale » et ceux qui ne voient l’induction complète qu’accompagnée de sa rengaine auront le droit de dire qu’on ne la trouve par dans les Eléments.</p>
+<p>Pour nous, nous la voyons dans les prop. 3, 27 et 36, VII, 2, 4 et 13, VIII, 8 et 9, IX.</p>
+</blockquote>
+<p>For example, Euclid’s proof of VII.8, VII.12, and VII.14. Euclid’s proof of XI.20 does the case where <span class="math inline">\(A,B,C\)</span> are given prime numbers, and lets <span class="math inline">\(ED\)</span> be the least number measured by <span class="math inline">\(A,B,C\)</span>, and takes <span class="math inline">\(EF=ED+DF=ED+1\)</span>.</p>
+<p>Proclus 381–382 <span class="citation" data-cites="proclus">(Morrow 1992, 300–301)</span>, on <span><em>Elements</em></span> I.32 (Proclus refers to <span><em>Timaeus</em></span> 53c):</p>
+<blockquote>
+<p>We can now say that in every triangle the three angles are equal to two right angles. But we must find a method of discovering for all the other rectilineal polygonal figures – for four-angled, five-angled, and all the succeeding many-sided figures – how many right angles their angles are equal to. First of all, we should know that every rectilineal figure may be divided into triangles, for the triangle is the source from which all things are constructed, as Plato teaches us when he says, “Every rectilineal plane face is composed of triangles.” Each rectilineal figure is divisible into triangles two less in number than the number of its sides: if it is a four-sided figure, it is divisible into two triangles; if five-sided, into three; and if six-sided, into four. For two triangles put together make at once a four-sided figure, and this difference between the number of the constituent triangles and the sides of the first figure composed of triangles is characteristic of all succeeding figures. Every many-sided figure, therefore, will have two more sides than the triangles into which it can be resolved. Now every triangle has been proved to have its angles equal to two right angles. Therefore the number which is double the number of the constituent triangles will give the number of right angles to which the angles of a many-sided figure are equal. Hence every four-sided figure has angles equal to four right angles, for it is composed of two triangles; and every five-sided figure, six right angles; and similarly for the rest.</p>
+</blockquote>
+<p>Proclus 422 <span class="citation" data-cites="proclus">(Morrow 1992, 334–35)</span>, on <span><em>Elements</em></span> I.45:</p>
+<blockquote>
+<p>For any rectilineal figure, as we said earlier, is as such divisible into triangles, and we have given the method by which the number of its triangles can be found. Therefore by dividing the given rectilineal figure into triangles and constructing a parallelogram equal to one of them, then applying parallelograms equal to the others along the given straight line – that line to which we made the first application – we shall have the parallelogram composed of them equal to the rectilineal figure composed of the triangles, and the assigned task will have been accomplished. That is, if the rectilineal figure has ten sides, we shall divide it into eight triangles, construct a parallelogram equal to one of them, and then by applying in seven steps parallelograms equal to each of the others, we shall have what we wanted.</p>
+</blockquote>
+<p>Netz <span class="citation" data-cites="netz">(Netz 1999, 51:268–69)</span>:</p>
+<blockquote>
+<p>The Greeks cannot speak of ‘<span class="math inline">\(A_1,A_2,\ldots,A_n\)</span>.’ What they must do is to use, effectively, something like a dot-representation: the general set of numbers is represented by a diagram consisting of a <span><em>definite</em></span> number of lines. Here the generalisation procedure becomes very problematic, and I think the Greeks realised this. This is shown by their tendency to prove such propositions with a number of numbers above the required minimum. This is an odd redundancy, untypical of Greek mathematical economy, and must represent what is after all a justified concern that the minimal case, being also a limiting case, might turn out to be unrepresentative. The fear is justified, but the case of <span class="math inline">\(n=3\)</span> is only quantitatively different from the case of <span class="math inline">\(n=2\)</span>. The truth is that in these propositions Greek actually prove for particular cases, the generalisation being no more than a guess; arithmeticians are prone to guess.</p>
+<p>To sum up: in arithmetic, the generalisation is from a particular case to an infinite multitude of mathematically distinguishable cases. This must have exercised the Greeks. They came up with something of a solution for the case of a single infinity. The double infinity of sets of numbers left them defenceless. I suspect Euclid was aware of this, and thus did not consider his particular proofs as rigorous proofs for the general statement, hence the absence of the <span><em>sumperasma</em></span>. It is not that he had any doubt about the truth of the general conclusion, but he did feel the invalidity of the move to that conclusion.</p>
+<p>The issue of mathematical induction belongs here.</p>
+<p>Mathematical induction is a procedure similar to the one described in this chapter concerning Greek geometry. It is a procedure in which generality is sustained by repeatability. Here the similarity stops. The repeatability, in mathematical induction, is not left to be seen by the well-educated mathematical reader, but is proved. Nothing in the practices of Greek geometry would suggest that a proof of repeatability is either possible or necessary. Everything in the practices of Greek geometry prepares one to accept the intuition of repeatability as a substitute for its proof. It is true that the result of this is that arithmetic is less tightly logically principled than geometry – reflecting the difference in their subject matters. Given the paradigmatic role of geometry in this mathematics, this need not surprise us.</p>
+</blockquote>
+<h1 id="part-and-parts">Part and parts</h1>
+<p>Definitions 3–7, 15 and 20 of <span><em>Elements</em></span> VII are the following <span class="citation" data-cites="euclidII">(Heath 1956, 277–78)</span>:</p>
+<blockquote>
+<p>3. A number is <strong>a part</strong> of a number, the less of the greater, when it measures the greater;</p>
+<p>4. but <strong>parts</strong> when it does not measure it.</p>
+<p>5. The greater number is a <strong>multiple</strong> of the less when it is measured by the less.</p>
+<p>6. An <strong>even number</strong> is that which is divisible into two equal parts.</p>
+<p>7. An <strong>odd number</strong> is that which is not divisible into two equal parts, or that which differs by an unit from an even number.</p>
+<p>15. A number is said to <strong>multiply</strong> a number when that which is multiplied is added to itself as many times as there are units in the other, and thus some number is produced.</p>
+<p>20. Numbers are <strong>proportional</strong> when the first is the same multiple, or the same part, or the same parts, of the second that the third is of the fourth.</p>
+</blockquote>
+<p>Either we define an odd number to be a number that is not even, or we define an odd number as one that differs from an even number by a unit. In the first case, we then prove that an odd number differs from an even number by a unit. In the second case, we then prove that an odd number is not even and that any number is either even or odd.</p>
+<p>Euclid, <span><em>Elements</em></span> VII.4 <span class="citation" data-cites="euclidII">(Heath 1956, 303)</span>:</p>
+<blockquote>
+<p>Any number is either a part or parts of any number, the less of the greater.</p>
+</blockquote>
+<p>Taisbak <span class="citation" data-cites="taisbak">(Taisbak 1971, 25:31, Chapter 4)</span> writes,</p>
+<blockquote>
+<p>In order to “save” Euclid I prefer to understand 7.4 as a “nomenclatural” theorem designed to introduce the statement “<span class="math inline">\(a\)</span> is parts of <span class="math inline">\(b\)</span>.”</p>
+</blockquote>
+<p>For <span class="math inline">\(A&gt;B\)</span> and <span class="math inline">\(C&gt;D\)</span>, we model “<span class="math inline">\(B\)</span> is the same parts of <span class="math inline">\(A\)</span> that <span class="math inline">\(D\)</span> is of <span class="math inline">\(C\)</span>” as follow: there are <span class="math inline">\(p,q \in \mathbb{Z}_{\geq 2}\)</span>, <span class="math inline">\(p&gt;q\)</span>, such that <span class="math display">\[A=p \cdot \ensuremath\mathrm{gcm}(A,B),\quad B=q \cdot \ensuremath\mathrm{gcm}(A,B),\quad C = p\cdot \ensuremath\mathrm{gcm}(C,D),\quad D = q \cdot \ensuremath\mathrm{gcm}(C,D).\]</span> To say that <span class="math inline">\(B\)</span> is parts of <span class="math inline">\(A\)</span> we thus must be given <span class="math inline">\(\ensuremath\mathrm{gcm}(A,B)\)</span>.</p>
+<div class="proof">
+<p><em>Proof.</em> Let <span class="math inline">\(A,BC \in \mathbb{Z}_{\geq 2}\)</span> with <span class="math inline">\(A&gt;BC\)</span>. Either <span class="math inline">\(A,BC\)</span> are relatively prime or they are not. If they are, <span class="math inline">\(\ensuremath\mathrm{gcm}(A,BC)=1\)</span>. ◻</p>
+</div>
+<h1 id="music-theory">Music theory</h1>
+<p>Philolaus, Fragment 6a <span class="citation" data-cites="philolaus">(Huffman 2006, 146–47)</span>, from Nicomachus, <span><em>Manual of Harmonics</em></span> 9:</p>
+<blockquote>
+<p>The magnitude of harmonia (fitting together) is the fourth (<span><em>syllaba</em></span>) and the fifth (<span><em>di’ oxeian</em></span>). The fifth is greater than the fourth by the ratio <span class="math inline">\(9:8\)</span> [a tone]. For from <span><em>hypatē</em></span> [lowest tone] to the middle string (<span><em>mesē</em></span>) is a fourth, and from the middle string to <span><em>neatē</em></span> [highest tone] is a fifth, but from <span><em>neatē</em></span> to the third string is a fourth, and from the third string to <span><em>hypatē</em></span> is a fifth. That which is in between the third string and the middle string is the ratio <span class="math inline">\(9:8\)</span> [a tone], the fourth has the ratio <span class="math inline">\(4:3\)</span>, the fifth <span class="math inline">\(3:2\)</span>, and the octave (<span><em>dia pasōn</em></span>) <span class="math inline">\(2:1\)</span>. Thus the harmonia is five <span class="math inline">\(9:8\)</span> ratios [tones] and two <span><em>dieses</em></span> [smaller semitones]. The fifth is three <span class="math inline">\(9:8\)</span> ratios [tones] and a <span><em>diesis</em></span>, and the fourth two <span class="math inline">\(9:8\)</span> ratios [tones] and a <span><em>diesis</em></span>.</p>
+</blockquote>
+<p>Huffman <span class="citation" data-cites="philolaus">(Huffman 2006, 164)</span> gives a <span><em>nihil obstat</em></span> for the following suggestion of Tannery. From the fifth <span class="math inline">\(3:2\)</span> take away the fourth <span class="math inline">\(4:3\)</span>, getting the tone <span class="math inline">\(9:8\)</span>, which is lesser than <span class="math inline">\(4:3\)</span>. From <span class="math inline">\(4:3\)</span> take away <span class="math inline">\(9:8\)</span>, getting <span class="math inline">\(32:27\)</span>, which is greater than <span class="math inline">\(9:8\)</span>. From <span class="math inline">\(32:27\)</span> take away <span class="math inline">\(9:8\)</span>, getting the <span><em>diesis</em></span> <span class="math inline">\(256:243\)</span>, which is lesser than <span class="math inline">\(9:8\)</span>. This procedure can be continued. From <span class="math inline">\(9:8\)</span> take away <span class="math inline">\(256:243\)</span>, getting the <span><em>apotome</em></span> <span class="math inline">\(2187:2048\)</span>, which is greater than <span class="math inline">\(256:243\)</span>. From <span class="math inline">\(2187:2048\)</span> take away <span class="math inline">\(256:243\)</span>, getting the <span><em>comma</em></span> <span class="math inline">\(531441:524288\)</span>, which is lesser than <span class="math inline">\(256:243\)</span>.</p>
+<p>Philolaus, Fragment 6b <span class="citation" data-cites="philolaus">(Huffman 2006, 364)</span>, from Boethius, <span><em>De Institutione Musica</em></span> III.8 (according to Huffman, it is uncertain if this fragment is genuine):</p>
+<blockquote>
+<p>Philolaus, then, defined these intervals and intervals smaller than these in the following way: diesis, he says, is the interval by which the ratio <span class="math inline">\(4:3\)</span> is greater than two tones. The comma is the interval by which the ratio <span class="math inline">\(9:8\)</span> is greater than two dieses, that is than two smaller semitones. Schisma is half of a comma, diaschisma half of a diesis, that is a smaller semitone.</p>
+</blockquote>
+<p>Plato, <span><em>Timaeus</em></span> 36b <span class="citation" data-cites="timaeus">(Cornford 1937, 71–72)</span>:</p>
+<blockquote>
+<p>And he went on to fill up all the intervals of <span class="math inline">\(\frac{4}{3}\)</span> (i.e. fourths) with the interval <span class="math inline">\(\frac{9}{8}\)</span> (the tone), leaving over in each a fraction. This remaining interval of the fraction had its terms in the numerical proportion of <span class="math inline">\(256\)</span> to <span class="math inline">\(243\)</span> (semitone).</p>
+</blockquote>
+<p>Szabó <span class="citation" data-cites="szabo">(Szabó 1978)</span> assembles a philological argument that the Euclidean algorithm was created as part of the Pythagorean theory of music. Szabó <span class="citation" data-cites="szabo">(Szabó 1978, 17:136, Chapter 2.8)</span> summarizes, “More precisely, this method was developed in the course of experiments with the monochord and was used originally to ascertain the ratio between the lengths of two sections on the monochord. In other words, successive subtraction was first developed in the musical theory of proportions.” Earlier in this work Szabó <span class="citation" data-cites="szabo">(Szabó 1978, 17:28–29)</span> says, “Euclidean arithmetic is predominantly of musical origin not just because, following a tradition developed in the theory of music, it uses straight lines (originally ‘sections of a string’) to symbolize numbers, but also because it uses the method of successive subtraction which was developed originally in the theory of music. However, the theory of odd and even clearly derives from an ‘arithmetic of counting stones’ (<span><em>psêphoi</em></span>), which did not originally contain the method of successive subtraction.”</p>
+<h1 id="celestial-cycles">Celestial cycles</h1>
+<p>Heath <span class="citation" data-cites="aristarchus">(Heath 1913, 284)</span> cites statements by Aulus Gellius, Pliny and Censorinus that in Athens, a day was defined to be the period from one sunset to the next. Geminus, <span><em>Introduction to the Phenomena</em></span> VIII <span class="citation" data-cites="aristarchus">(Heath 1913, 284–85)</span>:</p>
+<blockquote>
+<p>The ancients had before them the problem of reckoning the months by the moon, but the years by the sun. For the legal and oracular prescription that sacrifices should be offered after the manner of their forefathers was interpreted by all Greeks as meaning that they should keep the years in agreement with the sun and the days and months with the moon. Now reckoning the years according to the sun means performing the same sacrifices to the gods at the same seasons in the year, that is to say, performing the spring sacrifice always in the spring, the summer sacrifice in the summer, and similarly offering the same sacrifices from year to year at the other definite periods of the year when they fell due. For they apprehended that this was welcome and pleasing to the gods. The object in view, then, could not be secured in any other way than by contriving that the solstices and the equinoxes should occur in the same months from year to year. Reckoning the days according to the moon means contriving that the names of the days of the month shall follow the phases of the moon.</p>
+</blockquote>
+<p>We define a day to be a period from a sunset to the next sunset, a synodic month to be a period from a new moon to the next new moon, and a tropical year to be a period from a vernal equinox and the next vernal equinox. Two days need not have the same number of seconds, but this discrepancy is tiny and we shall model the phenomena by taking the period from any sunset to the next and from any other sunset to the next to be the same, and we call this common period <span class="math inline">\(D\)</span>. Likewise, we shall model the phenomena by taking the period from any vernal equinox to the next and from any other vernal equinox to the next to be the same, and we call this common period <span class="math inline">\(Y\)</span>. Finally, we shall model the phenomena by taking the period of a large number <span class="math inline">\(N\)</span> of consecutive synodic months to be nearly <span class="math inline">\(N \cdot M\)</span>, where <span class="math inline">\(M\)</span> is called the mean synodic month.</p>
+<p>Define a hollow month as <span class="math inline">\(H=29D\)</span> and a full month as <span class="math inline">\(F=30D\)</span>. Goldstein <span class="citation" data-cites="goldstein">(Goldstein 1966)</span> presents the following derivation of the Metonic cycle. Let us take as given that (i) <span class="math inline">\(Y\)</span> is a little more than <span class="math inline">\(365 D\)</span> and (ii) <span class="math inline">\(12 M\)</span> is a little more than <span class="math inline">\(354 D\)</span>. We partition time into hollow and full months, and take as given that (iii) this is done in such a way that among <span class="math inline">\(N\)</span> consecutive synodic months, there are more full months than hollow months. From (iii) we get <span class="math inline">\(N \cdot \frac{H+F}{2} &lt; N\cdot M &lt; N \cdot F\)</span>, i.e. <span class="math display">\[29 \sfrac{1}{2}  D&lt; M &lt; 30D,\]</span> namely, a mean synodic month is greater than <span class="math inline">\(29\sfrac{1}{2}\)</span> days and less than 30 days. Assume that <span class="math inline">\(pY\)</span> is nearly <span class="math inline">\(NM\)</span>. Let <span class="math inline">\(N=12 p + q\)</span>, so <span class="math inline">\(N  M = 12pM + qM\)</span>, and now, <span class="math display">\[12pM+29 \sfrac{1}{2} qD &lt;12pM+ qM &lt; 12pM+30qD,\]</span> so <span class="math display">\[12pM+29 \sfrac{1}{2} qD  &lt; NM &lt; 12pM +30qD.\]</span> By (i) and (ii), <span class="math inline">\(Y-12M\)</span> is nearly <span class="math inline">\(11D\)</span>. Assume that the difference is small enough that <span class="math inline">\(pY-12pM\)</span> is nearly <span class="math inline">\(11pD\)</span>, so <span class="math inline">\(12pM\)</span> is nearly <span class="math inline">\(pY-11pD\)</span>, and then <span class="math display">\[pY -NM+  \sfrac{1}{2} qD &lt; 11pD &lt;  pY -NM+ 30qD.\]</span> Because <span class="math inline">\(pY\)</span> is nearly <span class="math inline">\(NM\)</span>, this yields <span class="math display">\[29 \sfrac{1}{2} qD &lt; 11pD &lt; 30qD,\]</span> and therefore <span class="math display">\[29 \sfrac{1}{2} : 11 &lt; p:q &lt; 30:11.\]</span> For <span class="math inline">\(a:b &lt; c:d\)</span>, the ratio <span class="math inline">\((a+c):(b+d)\)</span> is called the <strong>mediant</strong> of the ratios <span class="math inline">\(a:b, c:d\)</span>. It is a fact that the mediant is greater than <span class="math inline">\(a:b\)</span> and less than <span class="math inline">\(c:d\)</span>. Following Fowler <span class="citation" data-cites="fowler">(Fowler 1999, 42–43)</span>, we first check <span class="math display">\[2:1&lt; 29 \sfrac{1}{2} : 11  &lt; 30:11 &lt; 3:1.\]</span> The mediant of <span class="math inline">\(2:1\)</span> and <span class="math inline">\(3:1\)</span> is <span class="math inline">\(5:2&lt;29 \sfrac{1}{2} : 11\)</span>. The mediant of <span class="math inline">\(5:2\)</span> and <span class="math inline">\(3:1\)</span> is <span class="math inline">\(8:3&lt;29 \sfrac{1}{2} : 11\)</span>. The mediant of <span class="math inline">\(8:3\)</span> and <span class="math inline">\(3:1\)</span> is <span class="math inline">\(11:4&gt;30:11\)</span>. The mediant of <span class="math inline">\(8:3\)</span> and <span class="math inline">\(11:4\)</span> is <span class="math inline">\(19:7\)</span>, which satisfies <span class="math inline">\(29 \sfrac{1}{2}:11 &lt; 19:7 &lt; 30:11\)</span>. Let <span class="math display">\[p=19,\qquad q=7,\qquad N = 12p+q = 235.\]</span> Then in our model of the phenomena, <span class="math inline">\(19Y\)</span> is nearly <span class="math inline">\(235M\)</span>. This is the <strong>Metonic cycle</strong>: in 19 years there are 110 hollow months and 125 full months, and <span class="math inline">\(110H+125F = 3190D + 3750D = 6940D\)</span>. See Geminus, <span><em>Introduction to the Phenomena</em></span> VIII <span class="citation" data-cites="geminus">(Evans and Berggren 2007)</span>.</p>
+<p>Let <span class="math inline">\(s\)</span> be a second and let <span class="math inline">\(d=24 \cdot 60 \cdot 60 s =  86400s\)</span>, called an ephemeris day. Take as granted that <span class="math inline">\(Y\)</span> is approximately <span class="math inline">\(365.2421897d\)</span> and that <span class="math inline">\(M\)</span> is approximately <span class="math inline">\(29.53059d\)</span>. We compute that the anthyphairesis of <span class="math inline">\(365.2421897:29.53059\)</span> is <span class="math display">\[[12,2,1,2,1,1,17,3,\ldots]\]</span> Now, <span class="math inline">\([12,2,1,2] =99:8\)</span>, which corresponds to the <strong>octaeteris</strong> cycle of Cleostratus: in <span class="math inline">\(8\)</span> years there are 99 synodic months. Furthermore, <span class="math inline">\([12,2,1,2,1,1] = 235:19\)</span>, which corresponds to the Metonic cycle: in 19 years there are 235 synodic months.</p>
+<p>Aelian, <span><em>Varia Historia</em></span>, 10.7 <span class="citation" data-cites="aelian">(Wilson 1997, 319)</span>:</p>
+<blockquote>
+<p>The astronomer Oenopides of Chios dedicated at Olympia the famous bronze tablet on which he had inscribed the movements of the stars for fifty-nine years, what he called the Great Year. Note that the astronomer Meton of the deme Leuconoe set up pillars and recorded on them the solstices. He claimed to have discovered the Great Year and said it was nineteen years.</p>
+</blockquote>
+<p>Zeeman <span class="citation" data-cites="zeeman">(Zeeman 1986)</span> talks about gear ratios of the Antikythera mechanism. There is a sun gear with 64 teeth that meshes with a gear with 38 teeth that is paired with a gear with 48 teeth. The gear with 48 teeth meshes with a gear with 24 teeth that is paired with a gear with 127 teeth. The gear with 127 teeth meshes with a moon gear with 32 teeth. The gear ratios are <span class="math inline">\(64:38\)</span>, <span class="math inline">\(48:24\)</span>, <span class="math inline">\(127:32\)</span>, and <span class="math display">\[\frac{64}{38} \cdot \frac{48}{24} \cdot \frac{127}{32} = \frac{254}{19}.\]</span> A sidereal year is close to <span class="math inline">\(365.25636d\)</span>, and a sidereal month is close to <span class="math inline">\(27.32166d\)</span>, and the anthyphairesis of <span class="math inline">\(365.25636:27.32166\)</span> is <span class="math display">\[[13,2,1,2,2,8,\ldots].\]</span> Now, <span class="math inline">\([13,2,1,2,2] = 254:19\)</span>. (It is not a coincidence that <span class="math inline">\(254=235+19\)</span>.)</p>
+<p>Proclus, <span><em>Commentary on Plato’s Timaeus</em></span> IV.91–92 <span class="citation" data-cites="timaeum4">(Baltzly 2013, 169–70)</span>:</p>
+<blockquote>
+<p>Following the Demiurgic generation of the spheres and the procession of the seven bodies, and following their ensoulment and the order instituted among them by the Father, and after their various motions and the temporal measures of each of their periods and the differences among the completions of their cycles, the account has proceeded to the monad of time’s plurality and the single number in terms of which every motion is measured – a measure by which all the other measures have been encompassed and in terms of which the entire life of the cosmos has been defined, as well as the diverse articulation of bodies and the universal lifespan that takes place across the all-perfect period. Now this number is one that must not be thought about in a manner that corresponds to opinion – just successively adding ten thousands upon ten thousands – for there are people who are accustomed to speak this way. They take an accurate figure for the completion of the Moon’s cycle and likewise for the Sun and multiply both; then they multiply these by the complete cycle for Mercury on top of this, and then that for Venus on top of these, and then Mars to all that, and then similarly for Jupiter and the remaining cycle for Saturn. On top of all that, they take the complete cycle for the sphere of the fixed stars and make the single and common complete cycle of the planets. Anyway, they could talk about it in this manner, if in fact the times for the completion of the cycles were prime to one another. If, however, they aren’t prime to one another, then they will need to take their common measure and see how many times this number goes into each of the periods it takes for the completion of a cycle. Then, taking the number of times this goes into the smallest one, they multiply the larger number by it. Conversely, taking the number of times this goes into the larger number, they will need to multiply the smaller number by that. By means of both of these operations of multiplication they will arrive at the same period which is common to both of the complete cycles – a period which is thus time measured by both of them. These are the sorts of things that people like that say.</p>
+</blockquote>
+<h1 id="aristarchus">Aristarchus</h1>
+<p>Aristarchus, <span><em>On the Sizes and Distances of the Sun and Moon</em></span>, Proposition 13 <span class="citation" data-cites="aristarchus">(Heath 1913, 397)</span> asserts that <span class="math inline">\(7921:4050&gt;88:45\)</span>. This can be obtained as follows using continued fractions.</p>
+<p><span class="math inline">\(7921=4050+3871\)</span>, <span class="math inline">\(4050=3871+179\)</span>, thus <span class="math inline">\(\frac{7921}{4050}=1+\frac{3871}{4050}\)</span> and <span class="math inline">\(\frac{4050}{3871}=1+\frac{179}{3871}\)</span>, so <span class="math display">\[\frac{7921}{4050}=1+\frac{3871}{4050} = 1+\cfrac{1}{1+\cfrac{179}{3871}}.\]</span> Next, <span class="math inline">\(3871=21\cdot 179+112\)</span>, <span class="math inline">\(179=112+67\)</span>, thus <span class="math display">\[\frac{3871}{179} = 21 +  \frac{112}{179} = 21+\cfrac{1}{1+\cfrac{67}{112}},\]</span> hence <span class="math display">\[\frac{7921}{4050} = 1+\cfrac{1}{1+\cfrac{1}{21+\cfrac{1}{1+\cfrac{67}{112}}}}\]</span> Finally, <span class="math inline">\(112=67+45\)</span>, whence <span class="math display">\[\frac{7921}{4050} = 1+\cfrac{1}{1+\cfrac{1}{21+\cfrac{1}{1+\cfrac{1}{1+\cfrac{45}{67}}}}}.\]</span> Then <span class="math display">\[1+\cfrac{1}{1+\cfrac{1}{21+\cfrac{1}{1+\cfrac{1}{1+0}}}} = \frac{88}{45}\]</span> is an approximation from below to <span class="math inline">\(\frac{7921}{4050}\)</span>.</p>
+<p>Proposition 15 <span class="citation" data-cites="aristarchus">(Heath 1913, 407)</span>, asserts that <span class="math inline">\(71755875:61735500&gt;43:37\)</span>. This can be found as follows. <span class="math display">\[v_0=71755875,\quad v_1 = 61735500.\]</span> Then <span class="math display">\[a_0 = T(71755875,61735500) = 1,\quad v_2 = 71755875 - 1\cdot 61735500 = 10020375.\]</span> Then <span class="math display">\[a_1 = T(61735500,10020375)=6,\quad v_3 = 61735500 - 6 \cdot 10020375 = 1613250.\]</span> Then <span class="math display">\[a_2 = T(10020375,1613250)=6,\quad v_4 = 10020375- 6 \cdot 1613250 = 340875.\]</span> Then <span class="math display">\[[a_0,a_1,a_2 ] = 1+\cfrac{1}{6+\cfrac{1}{6}} = \frac{43}{37}.\]</span> On the other hand, <span class="math display">\[\begin{aligned}
+\frac{71755875}{61735500}&amp;=1+\cfrac{1}{6+\cfrac{1}{6+\cfrac{340875}{1613250}}}.\end{aligned}\]</span></p>
+<h1 id="ptolemy">Ptolemy</h1>
+<p>Ptolemy, <span><em>Almagest</em></span> I.67.22 says the following <span class="citation" data-cites="dicks">(Dicks 1960, 91, Fragment 41)</span>:</p>
+<blockquote>
+<p>I have taken the arc from the northernmost limit to the most southerly, that is the arc between the tropics, as being always <span class="math inline">\(47^\circ\)</span> and more than two-thirds but less than three-quarters of a degree, which is nearly the same estimate as that of Eratosthenes and which Hipparchus also used; for the arc between the tropics amounts to almost exactly 11 of the units of which the meridian contains 83.</p>
+</blockquote>
+<p>Theon of Alexandria, <span><em>Commentary on Ptolemy’s Almagest</em></span>, writes the following about this passage:</p>
+<blockquote>
+<p>This ratio is nearly the same as that of Eratosthenes, which Hipparchus also used because it had been accurately measured; for Eratosthenes determined the whole circle as being 83 units, and found that part of it which lies between the tropics to be 11 units; and the ratio <span class="math inline">\(360^\circ: 47^\circ 42&#39; 40&#39;&#39;\)</span> is the same as <span class="math inline">\(83:11\)</span>.</p>
+</blockquote>
+<p>In fact, <span class="math inline">\(360^\circ: 47^\circ \, 42&#39; \, 40&#39;&#39; = 16200:2147\)</span>, and using the Euclidean algorithm we get <span class="math inline">\(16200:2147 = [7,1,1,5,195]\)</span>, from which we get the approximations <span class="math display">\[7,\quad 8, \quad 15:2,
+\quad 83:11,\quad 16200:2147.\]</span></p>
+<h1 id="theon-of-alexandria">Theon of Alexandria</h1>
+<p>Theon of Alexandria, in his <span><em>Commentary on Ptolemy’s Almagest</em></span>, I.10, writes <span class="citation" data-cites="LCL335">(Thomas 1991, 50–53)</span>:</p>
+<blockquote>
+<p>Conversely, let it be required to divide a given number by a number expressed in degrees, minutes and seconds. Let the given number be <span class="math inline">\(1515^\circ \, 20&#39; \,15&#39;&#39;\)</span>; and let it be required to divide this by <span class="math inline">\(25^\circ \, 12&#39; \, 10&#39;&#39;\)</span>, that is, to find how often <span class="math inline">\(25^\circ \, 12&#39; \, 10&#39;&#39;\)</span> is contained in <span class="math inline">\(1515^\circ \, 20&#39; \, 15&#39;&#39;\)</span>.</p>
+</blockquote>
+<p>These numbers are <span class="math display">\[1515^\circ \, 20&#39; \,15&#39;&#39; = 1515 + 20:60 + 15:60^2,\qquad 25^\circ \, 12&#39; \, 10&#39;&#39; = 25 + 12:60 + 10:60^2.\]</span> Theon works out the approximation <span class="math display">\[1515^\circ \, 20&#39; \,15&#39;&#39; : 25^\circ \, 12&#39; \, 10&#39;&#39;  \sim 60^\circ \, 7&#39; \, 33&#39;&#39;.\]</span> We obtain this using the Euclidean algorithm. Theon’s calculation resembles this but is different. We have <span class="math display">\[v_0=1515^\circ \, 20&#39; \,15&#39;&#39; ,\qquad v_1 = 25^\circ \, 12&#39; \, 10&#39;&#39;.\]</span> <span class="math inline">\(T(v_0,v_1)=60\)</span>, and <span class="math display">\[\begin{aligned}
+v_2&amp;=v_0 - T(v_0,v_1) \cdot v_1\\
+&amp;=1515^\circ \, 20&#39; \,15&#39;&#39; - 60\cdot (25^\circ \, 12&#39; \, 10&#39;&#39;)\\
+&amp;=1515^\circ \, 20&#39; \,15&#39;&#39;  - 1500^\circ - 60 \cdot (12&#39; \, 10&#39;&#39;)\\
+&amp;=15^\circ \, 20&#39; \, 15&#39;&#39; -  60 \cdot (12&#39; \, 10&#39;&#39;)\\
+&amp;=920&#39; \, 15&#39;&#39; - 720&#39; \, - 60 \cdot 10&#39;&#39;\\
+&amp;=200&#39; \, 15&#39;&#39; - 60 \cdot 10&#39;&#39;\\
+&amp;=200&#39; \, 15&#39;&#39; - 10&#39;\\
+&amp;=190&#39; \, 15&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_1,v_2) = 7\)</span>, and <span class="math display">\[\begin{aligned}
+v_3&amp;=v_1-T(v_1,v_2) \cdot v_2\\
+&amp;=25^\circ \, 12&#39; \, 10&#39;&#39; - 7\cdot (190&#39; \, 15&#39;&#39;)\\
+&amp;=1512&#39; \, 10&#39;&#39; - 7\cdot 190&#39; - 7\cdot 15&#39;&#39;\\
+&amp;=182&#39; \, 10&#39;&#39; - 105&#39;&#39;\\
+&amp;=180&#39; \, 130&#39;&#39; - 105&#39;&#39;\\
+&amp;=180&#39; \, 25&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_2,v_3)=1\)</span>, and <span class="math display">\[\begin{aligned}
+v_4&amp;=v_2-T(v_2,v_3) \cdot v_3\\
+&amp;=190&#39; \, 15&#39;&#39; - 1 \cdot 180&#39; \, 25&#39;&#39;\\
+&amp;=10&#39; \, 15&#39;&#39; - 25&#39;&#39;\\
+&amp;=9&#39; \, 75&#39;&#39; - 25&#39;&#39;\\
+&amp;=9&#39; \, 50&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_3,v_4)=18\)</span>, and <span class="math display">\[\begin{aligned}
+v_5&amp;=v_3-T(v_3,v_4) \cdot v_4\\
+&amp;=180&#39; \, 25&#39;&#39; - 18\cdot (9&#39; \, 50&#39;&#39;)\\
+&amp;=18&#39; \, 25&#39;&#39; - 18\cdot 50&#39;&#39;\\
+&amp;=18&#39; \, 25&#39;&#39; - 900&#39;&#39;\\
+&amp;=3&#39; \, 925&#39;&#39; - 900&#39;&#39;\\
+&amp;=3&#39; \, 25&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_4,v_5)=2\)</span>, and <span class="math display">\[\begin{aligned}
+v_6&amp;=v_4-T(v_4,v_5) \cdot v_5\\
+&amp;=9&#39; \, 50&#39;&#39; - 2 \cdot (3&#39; \, 25&#39;&#39;)\\
+&amp;=3&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_5,v_6)=1\)</span>, and <span class="math display">\[\begin{aligned}
+v_7&amp;=v_5-T(v_5,v_6) \cdot v_6\\
+&amp;=3&#39; \, 25&#39;&#39; - 1 \cdot 3&#39;\\
+&amp;=25&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_6,v_7)=7\)</span>, and <span class="math display">\[\begin{aligned}
+v_8&amp;=v_6-T(v_6,v_7) \cdot v_7\\
+&amp;=3&#39; - 7 \cdot 25&#39;&#39;\\
+&amp;=180&#39;&#39; - 7\cdot 25&#39;&#39;\\
+&amp;=5&#39;&#39;.\end{aligned}\]</span> <span class="math inline">\(T(v_7,v_8)=5\)</span>, and <span class="math display">\[\begin{aligned}
+v_9&amp;=v_7-T(v_7,v_8) \cdot v_8\\
+&amp;=25&#39;&#39; - 5 \cdot 5&#39;&#39;\\
+&amp;=0.\end{aligned}\]</span> This shows that <span class="math display">\[1515^\circ \, 20&#39; \,15&#39;&#39; : 25^\circ \, 12&#39; \, 10&#39;&#39;  = [60,7,1,18,2,1,7,5].\]</span> Now, <span class="math display">\[[60,7,1,18] = 9079:151 = 60^\circ \, 7&#39; \, 32&#39;&#39; \, 58&#39;&#39;&#39; \, 48&#39;&#39;&#39;&#39; \, \ldots
+\sim 60^\circ \, 7&#39; \, 33&#39;&#39;,\]</span> the approximation calculated by Theon.</p>
+<h1 id="commentators">Commentators</h1>
+<p>Nicomachus of Gerasa, <span><em>Introduction to Arithmetic</em></span> I.XIII.10–13 <span class="citation" data-cites="nicomachus">(D’Ooge, Robbins, and Karpinski 1926, XVI:206–7)</span>:</p>
+<blockquote>
+<p>We shall now investigate how we may have a method of discerning whether numbers are prime and incomposite, or secondary and composite, relatively to each other, since of the former unity is the common measure, but of the latter some other number also besides unity; and what this number is.</p>
+<p>Suppose there be given us two odd numbers and some one sets the problem and directs us to determine whether they are prime and incomposite relatively to each other or secondary and composite, and if they are secondary and composite what number is their common measure. We must compare the given numbers and subtract the smaller from the larger as many times as possible; then after this subtraction subtract in turn from the other, as many times as possible; for this changing about and subtraction from one and the other in turn will necessarily end either in unity or in some one and the same number, which will necessarily be odd. Now when the subtractions terminate in unity they show that the numbers are prime and incomposite relatively to each other; and when they end in some other number, odd in quantity and twice produced,’ then say that they are secondary and composite relatively to each other, and that their common measure is that very number which twice appears.</p>
+<p>For example, if the given numbers were 23 and 45, subtract 23 from 45, and 22 will be the remainder; subtracting this from 23, the remainder is 1, subtracting this from 22 as many times as possible you will end with unity. Hence they are prime and incomposite to one another, and unity, which is the remainder, is their common measure.</p>
+<p>But if one should propose other numbers, 21 and 49, I subtract the smaller from the larger and 28 is the remainder. Then again I subtract the same 21 from this, for it can be done, and the remainder is 7. This I subtract in turn from 21 and 14 remains; from which I subtract 7 again, for it is possible, and 7 will remain. But it is not possible to subtract 7 from 7; hence the termination of the process with a repeated 7 has been brought about, and you may declare the original numbers 21 and 49 secondary and composite relatively to each other, and 7 their common measure in addition to the universal unit.</p>
+</blockquote>
+<p>Martianus Capella, <span><em>The Marriage of Philology and Mercury</em></span>, VII, 785 <span class="citation" data-cites="martianusII">(Stahl, Johnson, and Burge 1977, 306)</span>:</p>
+<blockquote>
+<p>If two numbers are composite to one another, a greater and a smaller, how can their largest and their smallest common measure be found? From the larger number let the smaller be subtracted as often as possible; then let whatever amount is left from the former [larger] number be subtracted from the smaller number as often as possible. The amount of the difference will be the greatest measure of these numbers. Take the numbers 350 and 100. Let one hundred be subtracted as often as possible from 350, which is three times. The remainder is 50. From the other number of the pair, one hundred, let 50 be subtracted; the remainder is 50. This number is the greatest common measure of 350 and 100; for fifty times two is one hundred, and fifty times seven is 350. From this calculation it becomes clear how one finds, of all the numbers which measure two numbers, their greatest common measure.</p>
+</blockquote>
+<p>Iamblichus, <span><em>Commentary on Nicomachus’s Arithmetic</em></span> II.98–99 <span class="citation" data-cites="iamblichus">(Vinel 2014, 3:97)</span>:</p>
+<blockquote>
+<p>98. Il est au contraire possible d’être second en soi sans l’être en relation. Si deux impairs sont pris au hasard pour déterminer s’ils sont premiers ou seconds entre eux et, s’ils sont seconds, pour voir quelle mesure leur est commune, nous retrancherons toujours alternativement le petit du grand, autant de fois qu’il est possible, et le nombre restant du petit terme du début, et ainsi de suite, jusqu’à finir soit à l’unité, soit à un nombre quelconque, d’où plus aucune soustraction n’est possible, et ce nombre sera la mesure commune de ceux du début, qui seront dits seconds entre eux, tels 15 envers 35: leur mesure commune est cinq.</p>
+<p>99. En revanche, l’unité désigne ces nombres comme premiers et non composés entre eux chaque fois que l’opération s’achève en elle: elle est la seule mesure commune des nombres de ce type.</p>
+</blockquote>
+<p>Domninus of Larissa, <span><em>Encheiridion</em></span> 20–31 <span class="citation" data-cites="domninus">(Riedlberger 2013, 2:111–15)</span>:</p>
+<blockquote>
+<p>20. Every number, when compared to an arbitrary number with regard to the multitude of monads in them, is either equal to it, or unequal. If they are equal to one another, their relationship to one another will be unique and not further distinguishable. For in the case of equality, one thing cannot be in this fashion and the other thing in that fashion, since what is equal is equal in one single and the same way. If, however, they are unequal, ten different relationships can be contemplated concurrently.</p>
+<p>21. But before giving an account of these, we must state that it is true for every pair of numbers that the lesser is either a part, or parts, of the greater number, since, if it measures the greater one, it is a part of the greater number, such as in the case of 2 which measures 4 and 6, of which it is a half or a third part, respectively. If it does not measure it, it is parts of it, such as in case of 2, which, not measuring 3, is two thirds of it, or in the case of 9, which, not measuring 15, is three fifths of it.</p>
+<p>22. Having stated this as a preliminary, we say that if those two numbers which lie before us for inspection are unequal, the lesser either measures the greater, or it does not.</p>
+<p>23. If it measures it, the greater number is a multiple of the lesser one, and the lesser number is a submultiple of the greater one, as in the case of 3 and 9, since 9 is a multiple of 3, being its triple, and 3 is a submultiple of 9, being its subtriple.</p>
+<p>24. If it does not measure the greater number, and if one subtracts it from it once or several times, it will leave behind something less than itself whch will, by necessity, be either a part, or parts, of the number. For it will leave behind either a monad or some number.</p>
+<p>25. If it leaves behind a monad, it obviously leaves behind a part of itself. For the monad is part of every number, since every number is a combination of monads.</p>
+<p>26. If it leaves behind some number, it will be either a part of itself, or parts. For it is true for every pair of numbers that the lesser is either a part, or parts, of the greater.</p>
+<p>27. Now then, if the lesser number is subtracted once from the greater, and it leaves behind a number less than itself which is a part of it, then the greater number will be superparticular to the lesser, while the lesser number will be subsuperparticular to the greater, as in the case of 2 and 3. For 3 is superparticular to 2, since it includes it and a half of it (therefore, it is also called sesquialter of it), while 2 is subsesquialter to 3. And the same is the case with 6 and 8, as 8 is sesquitertian to 6, while 6 is subsesquitertian to 8.</p>
+<p>28. If the remainder is parts of the lesser number, then the greater number will be superpartient, while the lesser number will be subsuperparticular to the greater, as in the case of 3 and 5. For 5 is superpartient to 3, since it includes it and two thirds of it (therefore, it is also called superbitertian of it), while 3 is subsuperbitertian to 5. And the same is the case with 15 and 24, as 24 is supertriquantan of 15, since it includes it and three fifths of it, while 15 is subsupertriquintan of 24.</p>
+<p>29. If the lesser number is subtracted more often than once from the greater, and it leaves behind a number less than itself which is part of it, then the greater number will be multiple-superparticular, while the lesser number will be submultiple-superparticular to the greater, as in the case of 2 and 5. For 5 is multiple-superparticular to 2, since it includes it twice and a half of it (therefore, it is also called duplex-sesquialter of it), while 2 is subduplex-sesquialter to 5. And the same is the case with 6 and 26, as 26 is quadruplex-sesquitertian to 6, while 6 is subquadruplex-sesquitertian to 26.</p>
+<p>30. If the remainder is parts of the lesser number, then the greater number is multiple-superpartient, while the lesser number is submultiple-superpartient to the greater, as in the case of 3 and 8. For 8 is duplex-superbitertian to 3, while 3 is subduplex-superbitertian to 8. And the same is the case with 10 and 34, as 34 is triplex-superbiquintan of 10, while 10 is subtriplex-superbiquintan of 34.</p>
+<p>31. And these are the so-called ten relationships of inequality, to which the ancients also referred as ratios:</p>
+<ol>
+<li><p>multiple,</p></li>
+<li><p>submultiple,</p></li>
+<li><p>superparticular,</p></li>
+<li><p>subsuperparticular,</p></li>
+<li><p>superpartient,</p></li>
+<li><p>subsuperpartient,</p></li>
+<li><p>multiple-superparticular,</p></li>
+<li><p>submultiple-superparticular,</p></li>
+<li><p>multiple-superpartient,</p></li>
+<li><p>submultiple-superpartient.</p></li>
+</ol>
+<p>This is the theory of numbers with regard to one another according to the multitude underlying them.</p>
+</blockquote>
+<p>For example, take <span class="math inline">\(1386\)</span> and <span class="math inline">\(238\)</span>. Then <span class="math inline">\(1386=5\cdot 238 + 196\)</span>, in particular <span class="math inline">\(238\)</span> is not part of <span class="math inline">\(1386\)</span>. Then <span class="math inline">\(238=1\cdot 196+42\)</span>, <span class="math inline">\(196=4\cdot 42+28\)</span>, <span class="math inline">\(42=1\cdot 28+14\)</span>, <span class="math inline">\(28=2\cdot 14+0\)</span>, showing that <span class="math inline">\(\ensuremath\mathrm{gcm}(1386,238)=14\)</span>. <span class="math inline">\(1386=  99 \cdot 7\)</span> and <span class="math inline">\(119=17\cdot 14\)</span>, so <span class="math inline">\(119:1386 = 17:99\)</span>.</p>
+<p>Boethius <span><em>De institutione Arithmetica libri duo</em></span>, Book I, Chapter 18 <span class="citation" data-cites="grant1974">(Grant 1974, 21–22, §2)</span>, “On finding those numbers that are secondary and composite with respect to each other [and numbers that are] prime and incomposite relative to others”:</p>
+<blockquote>
+<p>The method by which we can find such numbers, if someone proposes them to us and declares that it is not known whether they are commensurable in any measure or [whether] the unit alone measures each, is this. Should two unequal numbers be given, it will be necessary to subtract the smaller from the greater, and if what remains is greater, subtract the smaller from the greater again; [but] if it is smaller, subtract it from the greater [number] that remains, and this should be done until [either] unity finally prevents any further diminution, or, if each of the numbers proposed is odd, some number [is reached that is] necessarily odd; but you will see that the number which is left is equal to that [odd] number. And so it is that if this subtraction should, in turn, reach one, the numbers are said to be prime to each other necessarily and they are conjoined by no other measure except unity alone. If, however, the end of the subtraction arrives at some [odd] number as was said above, it will be a number that measures each sum, and we call the same number that remains the common measure of each.</p>
+<p>Take two proposed numbers with respect to which we do not know whether some common measure measures them; let these be <span class="math inline">\(9\)</span> and <span class="math inline">\(29\)</span>. Now we make an alternate subtraction. Let the smaller be subtracted from the greater, that is, <span class="math inline">\(9\)</span> from <span class="math inline">\(29\)</span>, and <span class="math inline">\(20\)</span> is left; let us now again subtract the smaller, that is, <span class="math inline">\(9\)</span> from <span class="math inline">\(20\)</span>, and <span class="math inline">\(11\)</span> is left; I again subtract <span class="math inline">\(9\)</span> from the remainder [i.e., <span class="math inline">\(11\)</span>] and <span class="math inline">\(2\)</span> remains. If I subtract this from <span class="math inline">\(9\)</span>, <span class="math inline">\(7\)</span> is left, and if I again take <span class="math inline">\(2\)</span> from <span class="math inline">\(7\)</span>, <span class="math inline">\(5\)</span> remains; and from this another <span class="math inline">\(2\)</span> and <span class="math inline">\(3\)</span> remains, which after it is diminished by another <span class="math inline">\(2\)</span> leaves only unity. Again, if I subtract one from two, the end of the subtraction is fixed at one, which shows that there is no other common measure of these two numbers, namely <span class="math inline">\(9\)</span> and <span class="math inline">\(29\)</span>. Therefore, we will call these numbers prime to each other.</p>
+<p>But should other numbers be proposed in the same situation, that is <span class="math inline">\(21\)</span> and <span class="math inline">\(9\)</span>, they could be investigated since they would be mutually related. Again I subtract the quantity of the smaller number from the greater, that is, <span class="math inline">\(9\)</span> from <span class="math inline">\(21\)</span>, and <span class="math inline">\(12\)</span> remains. From <span class="math inline">\(12\)</span> I take <span class="math inline">\(9\)</span> and <span class="math inline">\(3\)</span> remains, which if subtracted from <span class="math inline">\(9\)</span> leaves <span class="math inline">\(6\)</span>; and if <span class="math inline">\(3\)</span> were taken from <span class="math inline">\(6\)</span>, <span class="math inline">\(3\)</span> would be left, from which <span class="math inline">\(3\)</span> cannot be subtracted for it is equal to it. For <span class="math inline">\(3\)</span>, which was reached by continually subtracting, cannot be subtracted from <span class="math inline">\(3\)</span>, since they are equal. Therefore, we shall pronounce them commensurable, and <span class="math inline">\(3\)</span>, which is the remainder, is their common measure.</p>
+</blockquote>
+<p>Asclepius of Tralles <span class="citation" data-cites="taran">(Tarán 1969, 44, 78)</span>, I.re</p>
+<p>John Philoponus <span class="citation" data-cites="philoponus">(Hoche 1864)</span></p>
+<p>Scholia for Book VII <span class="citation" data-cites="euclidisV">(Heiberg 1888)</span>.</p>
+<h1 id="latin-writers">Latin writers</h1>
+<p>Al-Nayrizi, <span><em>Commentry on Euclid’s Elements</em></span>, extant in a Latin translation by Gerard of Cremona <span class="citation" data-cites="anaritius">(Curtze 1899, 190–91)</span>, states <span><em>Elements</em></span> VII.2.</p>
+<p>Gericke <span class="citation" data-cites="gericke">(Gericke 1990, 105)</span> comments on Campanus, Book VII.</p>
+<p>Campanus <span class="citation" data-cites="campanusI">(Busard 2005, 230–31)</span>, <span><em>Elements</em></span> VII, Definitions:</p>
+<blockquote>
+<p>(i) Unitas est qua unaqueque res dicitur una.</p>
+<p>(ii) Numerus est multitudo ex unitatibus composita.</p>
+<p>(iii) Naturalis series numerorum dicitur in qua secundum unitatis additionem fit ipsorum computatio.</p>
+<p>(iv) Differentia numerorum appellatur numerus quo maior habundat a minore.</p>
+<p>(v) Numerus primus dicitur, qui sola unitate metitur.</p>
+<p>(vi) Numerus compositus dicitur, quem alius numerus metitur.</p>
+<p>(vii) Numeri contra se dicuntur primi, qui nullo modo excepta sola unitate numerantur.</p>
+<p>(viii) Numeri ad invicem compositi sive communicantes dicuntur, quos alius numerus quam unitas metitur nullusque eorum est ad alium primus.</p>
+<p>(ix) Numerus per alium multiplicare dicitur qui totiens sibi coacervatur quotiens in multiplicante est unitas.</p>
+<p>(x) Productus vero dicitur qui ex eorum multiplicatione crescit.</p>
+<p>(xi) Numerus alium numerare dicitur qui secundum aliquem multiplicatus illum producit.</p>
+<p>(xii) Pars est numerus numeri minor maioris cum minor maiorem numerat. Et qui numeratur numerantis multiplex appellatur.</p>
+<p>(xiii) Denominans est numerus secundum quem pars sumitur in suo toto.</p>
+<p>(xiv) Similes dicuntur partes que ab eodem numero denominantur.</p>
+<p>(xv) Prima et simpla numeri pars est unitas.</p>
+<p>(xvi) Quando duo numeri partem habuerint communem, tot partes maioris dicetur esse minor quotiens eadem pars fuerit in minore, tote vero quotiens ipsa fuerit in maiore.</p>
+<p>(xvii) Numeri ad numerum dicitur proportio minoris quidem ad maiorem in eo quod maioris pars est aut partes. Maioris vero ad minorem secundum quod eum continet et eius partem vel partes.</p>
+<p>(xviii) Cum fuerint quotlibet numeri continue proportionales dicetur proportio primi ad tertium sicut primi ad secundum duplicata, ad quartum vero triplicata.</p>
+<p>(xix) Cum continuate fuerint eedem vel diverse proportiones, dicetur proportio primi ad ultimum ex omnibus composita.</p>
+<p>(xx) Denominatio dicitur proportionis minoris quidem numeri ad maiorem pars vel partes ipsius minoris que in maiore sunt. Maioris autem ad minorem totum vel totum et pars vel partes prout maior superfluit.</p>
+<p>(xxi) Similes sive una alii eadem dicuntur proportiones que eandem denominationem recipiunt. Maior vero que maiorem. Minor autem que minorem.</p>
+<p>(xxii) Numeri vero quorum proportio una, proportionales appellantur.</p>
+<p>(xxiii) Termini sive radices dicuntur quibus in eadem proportione minores sumi impossibile est.</p>
+</blockquote>
+<p>Campanus <span class="citation" data-cites="campanusI">(Busard 2005, 231)</span>, <span><em>Elements</em></span> VII.1:</p>
+<blockquote>
+<p>Si a maiore duorum numerorum minor detrahatur donec minus eo supersit, ac deinde de minore ipsum reliquum donecminus eo relinquatur, itemque a reliquo primo reliquum secundum quousque minus eo qui ante relictum numeret usque ad unitatem, eos duos numeros contra se primos esse necesse est.</p>
+</blockquote>
+<p>Campanus <span class="citation" data-cites="campanusI">(Busard 2005, 232)</span>, <span><em>Elements</em></span> VII.2:</p>
+<blockquote>
+<p>Propositis duobus numeris ad invicem compositis maximum numerum communem eos numerantem invenire. (Corollarium) Unde manifestum est quia omnis numerus duos numeros numerans numerat numerum maximum ambos numerantem.</p>
+</blockquote>
+<p>Campanus <span class="citation" data-cites="campanusI">(Busard 2005, 233)</span>, <span><em>Elements</em></span> VII.3:</p>
+<blockquote>
+<p>Propositis tribus numeris ad invicem compositis maximum numerorum eos communiter numerantium invenire.</p>
+</blockquote>
+<p>Campanus <span class="citation" data-cites="campanusI">(Busard 2005, 234)</span>, <span><em>Elements</em></span> VII.4:</p>
+<blockquote>
+<p>Omnium duorum numerorum inequalium minor maioris aut pars est aut partes.</p>
+</blockquote>
+<p>Rommevaux <span class="citation" data-cites="rommevaux">(Rommevaux 1999)</span></p>
+<p>Jordanus Nemorarius, <span><em>De elementis arithmetice artis</em></span> III.14 <span class="citation" data-cites="jordanus">(Busard 1991, 87–88)</span>:</p>
+<blockquote>
+<p>Si sint duo numeri contra se primi minorque de maiore aliquotiens detrahatur, aut relinquetur unitas aut numerus ad detractum primus.</p>
+<p>Ut <span class="math inline">\(a\)</span> et <span class="math inline">\(b\)</span> sint contra se primi detrahatur <span class="math inline">\(a\)</span> de <span class="math inline">\(b\)</span> quotienslibet sitque detractum <span class="math inline">\(c\)</span> et residuum <span class="math inline">\(d\)</span>. Dico quod <span class="math inline">\(d\)</span> est primus ad <span class="math inline">\(a\)</span> vel est unitas. Si enim esset commensurabilis cum <span class="math inline">\(a\)</span>, ponatur communis mensura <span class="math inline">\(e\)</span> numerabitque <span class="math inline">\(e\)</span> etiam <span class="math inline">\(c\)</span> per xxiii<sup>am</sup> primi. Qui quia numerat <span class="math inline">\(d\)</span> palam quia numerabit et <span class="math inline">\(b\)</span>. Sicque <span class="math inline">\(a\)</span> et <span class="math inline">\(b\)</span> erunt communicantes. Quod est contra ypothesim.</p>
+</blockquote>
+<p>Book I, Proposition 23 says that if <span class="math inline">\(b=(1/d) a\)</span> and <span class="math inline">\(c=(1/e) b\)</span> then <span class="math inline">\(c=(1/(d\cdot e)) a\)</span>.</p>
+<p>Jordanus Nemorarius, <span><em>De elementis arithmetice artis</em></span> III.15 <span class="citation" data-cites="jordanus">(Busard 1991, 88)</span>:</p>
+<blockquote>
+<p>Cum fuerint duo numeri contra se primi et minore de maiore quoad potest detracto residuum a prius detracto detrahatur, continua facta dectractione unitatem relinqui est necesse. Quod si unitas residua fuerit, positos numeros incommensurabiles esse conveniet.</p>
+<p>Sit maior <span class="math inline">\(a\)</span>, detractus <span class="math inline">\(b\)</span>, residuus <span class="math inline">\(c\)</span>. Qui si fuerit unitas, constat propsitio. Si autem numerus idem detrahatur quotiens potest de <span class="math inline">\(b\)</span> et relinquatur <span class="math inline">\(d\)</span> qui vel erit unitas vel numerus primus ad <span class="math inline">\(c\)</span>. Itemque <span class="math inline">\(d\)</span> de <span class="math inline">\(c\)</span> detrahatur quotiens potest eritque residuum minus <span class="math inline">\(d\)</span> sitque <span class="math inline">\(e\)</span> quod vel erit unitas vel numerus primus ad <span class="math inline">\(d\)</span> per premissam. Qui si detrahatur a <span class="math inline">\(d\)</span> remanebit minus eo. Et quia hec diminutio non potest fieri in infinitum quod quidem esst si semper remaneret numerus ad detractum primus, restat ut unitas relinquatur. Patet igitur pars prima. Reliquum indirecte. Si enim ponerentur commensurabiles, numerum eos numerantem unitatem numerare convinceres per xii<sup>am</sup> primi.</p>
+</blockquote>
+<p>Johannes de Muris, <span><em>Quadripartitum numerorum</em></span> I.8 <span class="citation" data-cites="huillier">(L’Huillier 1990, 32:154–55)</span>:</p>
+<blockquote>
+<p>Propositis tibi duobus numeris inequalibus, si an eos communis mensura metiatur agnoscere jubearis, sic age:</p>
+<p>Aufer minorem de majori, vicibus alternatis, quousque detractio reciproca in aliquo numero steterit, si non usque pervenerit unitatem. Et quicumque numerus relictus fuerit ante nichil, ut nunc unitas numerus permutatur, pro communi maxima mensura procul dubio teneatur. Quod si aliquis numerus preter unitatem subtractionem finierit, ipse mensuram lucratus est et ipsos numeros secundarios et compositos fore non dubites. Si vero sola unitas superstes egreditur, ipsos esse contra se primos omni necessitate conclude.</p>
+<p>Aliter ad idem. Cum omnis divisio sit quedam subtractio, non tamen convertitur, sicut omnis multiplicatio additio est et non contra. Datis duobus numeris inequalibus, divide majorem per minorem, et per residuum, si quod fuerit, divide divisorem et iterum residuum per minorem, quousque in tali alternata divisione nichil finaliter restiterit dividendum. Et si perventum fuerit usque ad unum, contra se primi numeri propositi constiterunt. Si vero aliquis numerus ante nichil evaserit, ipsos quidem numeros datos esse ad invicem compositos attestatur.</p>
+</blockquote>
+<p>Theinred of Dover, <span><em>De legitimis ordinibus pentachordorum et tetrachordorum</em></span> I.xviii <span class="citation" data-cites="theinred">(Snyder 2006, 18:176–81)</span></p>
+<p>Prosdocimo <span class="citation" data-cites="prosdocimo">(Herlinger 1987)</span></p>
+<p>Nicole Oresme <span class="citation" data-cites="grant1966">(Grant 1966)</span></p>
+<h1 id="leonardo-of-pisa">Leonardo of Pisa</h1>
+<p>Leonardo of Pisa, <span><em>The Book of Squares</em></span>, Proposition 22 <span class="citation" data-cites="sigler">(Sigler 1987, 93)</span>: “I wish to find in a given ratio the two differences among three squares.” That is, given <span class="math inline">\(a,b \in \mathbb{Z}_{\geq 1}\)</span>, to find <span class="math inline">\(x,y,z \in \mathbb{R}_{&gt;0}\)</span> such that <span class="math display">\[\frac{y^2-x^2}{z^2-y^2}=\frac{a}{b};\]</span> see <span class="citation" data-cites="sigler">(Sigler 1987, 101)</span>. Suppose that <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are relatively prime, <span class="math inline">\(b&gt;a\)</span>, and let <span class="math inline">\(v,w \in \mathbb{Z}_{\geq 1}\)</span> satisfy <span class="math display">\[bv-aw=1;\]</span> such <span class="math inline">\(v,w\)</span> can be found using <a href="#linear" data-reference-type="eqref" data-reference="linear">[linear]</a>. Then let <span class="math display">\[u= avw+a\cdot \frac{w(w+1)}{2} - b\cdot \frac{v(v+1)}{2}.\]</span> As <span class="math inline">\(v\)</span> and <span class="math inline">\(w\)</span> are relatively prime, it follows from this that <span class="math inline">\(u \in \mathbb{Z}\)</span>, and one checks that <span class="math display">\[2u = v(aw-1) + (aw^2-1).\]</span> Hence <span class="math inline">\(u \in \mathbb{Z}_{\geq 0}\)</span>, and if <span class="math inline">\(a &gt; 1\)</span> then <span class="math inline">\(u \in \mathbb{Z}_{\geq 2}\)</span>. Now, <span class="math display">\[\begin{aligned}
+(u+1)+\cdots(u+v)&amp;
+=\frac{uv}{bv-aw}+\frac{v(v+1)}{2}\\
+&amp;=\frac{avw\cdot v + av \cdot   \frac{w(w+1)}{2} - bv \cdot \frac{v(v+1)}{2}}{bv-aw}
++\frac{v(v+1)}{2}\\
+&amp;=\frac{avw\cdot v +av\cdot \frac{w(w+1)}{2}-aw\cdot \frac{v(v+1)}{2}}{bv-aw}\\
+&amp;=\frac{avw(v+w)}{2}\end{aligned}\]</span> and <span class="math display">\[\begin{split}
+&amp;(u+v+1)+\cdots+(u+v+w)\\
+=&amp;uw+vw+\frac{w(w+1)}{2}\\
+=&amp;\frac{avw\cdot w+aw\cdot \frac{w(w+1)}{2}-bw\cdot
+\frac{v(v+1)}{2}}{bv-aw} +vw+\frac{w(w+1)}{2}\\
+=&amp;\frac{bvw(v+w)}{2},
+\end{split}\]</span> thus <span class="math display">\[\frac{a}{b} = \frac{(u+1)+\cdots(u+v)}{(u+v+1)+\cdots+(u+v+w)}.\]</span> But <span class="math display">\[(2p-1)^2 = 1 + 1\cdot 8 + 2\cdot 8 + \cdots (p-1) \cdot 8,\]</span> whence <span class="math display">\[\begin{aligned}
+8\cdot \left( (u+1)+\cdots(u+v)\right) &amp;= \left(1+ \sum_{j=1}^{u+v} 8 j\right) - \left(1+ \sum_{j=1}^u 8 j\right)\\
+&amp;= [2\cdot (u+v+1)-1]^2 - [2 \cdot (u+1)-1]^2\\
+&amp;=(2u+2v+1)^2 - (2u+1)^2\end{aligned}\]</span> and <span class="math display">\[\begin{split}
+&amp;8\cdot ((u+v+1)+\cdots+(u+v+w))\\
+=&amp; \left(1+\sum_{j=1}^{u+v+w} j \right) - \left( 1 + \sum_{j=1}^{u+v} j \right)\\
+=&amp;[2\cdot (u+v+w+1)-1]^2 - [2\cdot(u+v+1)-1]^2\\
+=&amp;(2u+2v+2w+1)^2 - (2u+2v+1)^2.
+\end{split}\]</span> Therefore, taking <span class="math display">\[x = 2u+1,\qquad y = 2u+2v+1,\qquad z = 2u+2v+2w+1,\]</span> we have <span class="math display">\[\frac{y^2-x^2}{z^2-y^2} = \frac{a}{b}.\]</span></p>
+<p>For <span class="math inline">\(a=5\)</span> and <span class="math inline">\(b=29\)</span>, we do the Euclidean algorithm with <span class="math inline">\(v_0=29\)</span> and <span class="math inline">\(v_1=5\)</span>. Then <span class="math display">\[a_0 = T(29,5) = 5,\quad v_2 = 29 - T(29,5)\cdot 5 = 4.\]</span> Then <span class="math display">\[a_1 = T(5,4) = 1,\quad v_3 = 5 - T(5,4)\cdot 4 = 1.\]</span> Then <span class="math display">\[a_2 = T(4,1) = 4,\quad v_4 = 4 - T(4,1) \cdot 1 = 0,\]</span> so <span class="math inline">\(N=3\)</span>, <span class="math inline">\(v_N=1\)</span>, <span class="math inline">\(v_{N+1}=0\)</span>. By <a href="#pnqn" data-reference-type="eqref" data-reference="pnqn">[pnqn]</a>, <span class="math display">\[\begin{pmatrix}p_0&amp;p_{-1}\\
+q_0&amp;q_{-1}
+\end{pmatrix}
+=\begin{pmatrix}a_0&amp;1\\
+1&amp;0
+\end{pmatrix}
+=\begin{pmatrix}5&amp;1\\
+1&amp;0
+\end{pmatrix}\]</span> and then <span class="math display">\[\begin{pmatrix}p_1&amp;p_0\\
+q_1&amp;q_0
+\end{pmatrix}
+=\begin{pmatrix}p_0&amp;p_{-1}\\
+q_0&amp;q_{-1}
+\end{pmatrix}
+\begin{pmatrix}a_1&amp;1\\
+1&amp;0
+\end{pmatrix}
+=\begin{pmatrix}
+6&amp;5\\
+1&amp;1
+\end{pmatrix},\]</span> and then <span class="math display">\[\begin{pmatrix}p_2&amp;p_1\\
+q_2&amp;q_1
+\end{pmatrix}
+=\begin{pmatrix}
+p_1&amp;p_0\\
+q_1&amp;q_0
+\end{pmatrix}
+\begin{pmatrix}
+a_2&amp;1\\
+1&amp;0
+\end{pmatrix}
+=\begin{pmatrix}
+29&amp;6\\
+5&amp;1
+\end{pmatrix}.\]</span> But by <a href="#linear" data-reference-type="eqref" data-reference="linear">[linear]</a> it holds that <span class="math inline">\(v_0 q_{N-2} - v_1 p_{N-2} = (-1)^N v_N\)</span>. Here, <span class="math inline">\(p_{N-2}=p_1 = 6, q_{N-2}=q_1=1\)</span>, thus <span class="math inline">\(29\cdot (-1)-5\cdot (-6) = 1\)</span>, and thus <span class="math inline">\(29 \cdot (-1+5) - 5 \cdot (-6+29)=1\)</span>, i.e. <span class="math display">\[bv-aw=1,\qquad v=4, \quad w=23.\]</span> Then <span class="math display">\[u = 5\cdot 4\cdot 23 + 5\cdot \frac{23\cdot 24}{2} - 29 \cdot \frac{4\cdot 5}{2}
+=1550.\]</span> Then <span class="math display">\[x = 2u+1 = 3101,\qquad y = 2u+2v+1 = 3109,\qquad z=2u+2v+2w+1=3155.\]</span> Summarizing, <span class="math display">\[\frac{3109^2 - 3101^2}{3155^2-3109^2} = \frac{5}{29}.\]</span></p>
+<h1 id="chinese-mathematics">Chinese mathematics</h1>
+<p><span><em>Suan shu shu</em></span>, problem 7 <span class="citation" data-cites="suanshushu">(Dauben 2008, 111–12)</span>:</p>
+<blockquote>
+<p>The rule for simplifying fractions says: Take the numerator and subtract it (successively) from the denominator; also take the denominator and subtract it (successively) from the numerator; (when) the amounts of the numerator and denominator are equal, this will simplify it (the fraction will be simplified). Another rule for simplifying fractions says: if it can be halved, halve it; if it can be divided by a certain number, divide by it. Yet another rule says: Using the numerator of the fraction, subtract it (successively) from the denominator; using the remainder as denominator, subtract it (successively) from the numerator; use what is equal to (both) numerator and denominator as the divisor; then it is possible to divide both the numerator and denominator by this number. If it is not possible (lit. if there is not enough) to subtract but it can be halved, halve the denominator and also halve the numerator. <span class="math inline">\(162/2016\)</span>, simplified, is <span class="math inline">\(9/112\)</span>.</p>
+</blockquote>
+<p><span><em>The Nine Chapters on the Mathematical Art</em></span>, I.6 <span class="citation" data-cites="ninechapters">(Lun, Crossley, and Shen 1999, 64)</span>:</p>
+<blockquote>
+<p>If [the denominator and numerator] can be halved, halve them. If not, lay down the denominator and numerator, subtract the smaller number from the greater. Repeat the process to obtain the GCD (dengshu). Reduce them by the GCD.</p>
+</blockquote>
+<p>Liu Hui in his commentary writes, “To reduce a fraction by the GCD means to divide. Subtract the smaller number from the greater repeatedly, because the remainders are nothing but the overlaps of the GCD, therefore divide by the GCD.”</p>
+<p>On the Chinese remainder theorem see Libbrecht <span class="citation" data-cites="libbrecht">(Libbrecht 2005)</span>.</p>
+<h1 id="conclusions">Conclusions</h1>
+<p>The Euclidean algorithm belongs to the intersection of Books VII–IX and Books V, VI, X of the <span><em>Elements</em></span>. We have mentioned works about the second set. For Books VII–IX we have the following to say.</p>
+<p>Euclid, <span><em>Elements</em></span> VII.20 <span class="citation" data-cites="euclidII">(Heath 1956, 320)</span>:</p>
+<blockquote>
+<p>The least numbers of those which have the same ratio with them measure those which have the same ratio the same number of times, the greater the greater and the less the less.</p>
+</blockquote>
+<p><span><em>Elements</em></span> VII.20 is equivalent to the statement that if a number measures a product of two numbers and is relatively prime to one of the two numbers then it measures the other number. Taisbak <span class="citation" data-cites="taisbak">(Taisbak 1971, 25:9, Chapter 1)</span> says about <span><em>Elements</em></span> VII.20,</p>
+<blockquote>
+<p>as cited above it sounds trivial, at most somewhat impenetrable. Almost all the arithmetical theorems of the Elements have that stamp of impenetrability to a modern reader, and my experience is that they open only to the patient reader and even then only to one who is prepared to give up his preconceived opinions as to what Euclid’s theory of proportions is all about.</p>
+</blockquote>
+<p>Euclid, <span><em>Elements</em></span> VII.30 <span class="citation" data-cites="euclidII">(Heath 1956, 331)</span>:</p>
+<blockquote>
+<p>If two numbers by multiplying make some number, and any prime number measure the product, it will also measure one of the original numbers.</p>
+</blockquote>
+<p>This theorem is commented on by Pengelley and Richman <span class="citation" data-cites="pengelley">(Pengelley and Richman 2006)</span>.</p>
+<p>It would also be worthwhile to survey the occurence of the Euclidean algorithm in Arabic mathematical works. Saidan <span class="citation" data-cites="saidan">(Saidan 1974)</span> summarizes the <span><em>Arithmetic</em></span> of Abu al-Wafa. Saidan <span class="citation" data-cites="saidan">(Saidan 1974, 371)</span> states that in <span><em>Arithmetic</em></span> II.3 (pp. 160–173 in Saidan’s edition of the Arabic text), the Euclidean algorithm is used to find common denominators of fractions.</p>
+<p>Burnett <span class="citation" data-cites="burnett2010">(Burnett 2010)</span></p>
+<p>Vitrac <span class="citation" data-cites="vitrac2">(Vitrac 1994)</span></p>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-metrica" class="csl-entry" role="doc-biblioentry">
+Acerbi, Fabio, and Bernard Vitrac. 2014. <em><span class="nocase">Héron d’Alexandrie, <span><em>Metrica</em></span>, introduction, texte critique, traduction française et notes de commentaire</span></em>. Vol. 4. Mathematica Graeca Antiqua. Fabrizio Serra editore.
+</div>
+<div id="ref-allen" class="csl-entry" role="doc-biblioentry">
+Allen, R. E. 1997. <em><span class="nocase">Plato’s <span><em>Parmenides</em></span></span></em>. Vol. 4. The Dialogues of Plato. Yale University Press.
+</div>
+<div id="ref-timaeum4" class="csl-entry" role="doc-biblioentry">
+Baltzly, Dirk, ed. 2013. <em><span class="nocase">Proclus, Commentary on Plato’s <span><em>Timaeus</em></span>, volume V. Book 4: Proclus on Time and the Stars</span></em>. Cambridge University Press.
+</div>
+<div id="ref-barker" class="csl-entry" role="doc-biblioentry">
+Barker, Andrew. 2004. <em>Greek Musical Writings, Volume <span>II</span>: Harmonic and Acoustic Theory</em>. Cambridge Readings in the Literature of Music. Cambridge University Press.
+</div>
+<div id="ref-beere" class="csl-entry" role="doc-biblioentry">
+Beere, Jonathan. 2012. <em><span class="nocase">Doing and Being: An Interpretation of Aristotle’s <span><em>Metaphysics</em></span> Theta</span></em>. Oxford Aristotle Studies Series. Oxford University Press.
+</div>
+<div id="ref-burnett2010" class="csl-entry" role="doc-biblioentry">
+Burnett, Charles. 2010. <em>Numerals and Arithmetic in the <span>Middle Ages</span></em>. Ashgate Variorum.
+</div>
+<div id="ref-burnyeat" class="csl-entry" role="doc-biblioentry">
+Burnyeat, M. F. 2000. <span>“Plato on Why Mathematics Is Good for the Soul.”</span> In <em>Mathematics and Necessity: Essays in the History of Philosophy</em>, edited by Timothy Smiley, 103:1–81. Proceedings of the British Academy. Oxford University Press.
+</div>
+<div id="ref-jordanus" class="csl-entry" role="doc-biblioentry">
+Busard, H. L. L., ed. 1991. <em><span class="nocase">Jordanus de Nemore, <span><em>De elementis arithmetice artis</em></span>: a medieval treatise on number theory. Part I: Text and paraphrase</span></em>. Stuttgart: Franz Steiner Verlag.
+</div>
+<div id="ref-campanusI" class="csl-entry" role="doc-biblioentry">
+———, ed. 2005. <em><span class="nocase">Campanus of Novara and Euclid’s <span><em>Elements</em></span>, volume I</span></em>. Stuttgart: Franz Steiner Verlag.
+</div>
+<div id="ref-christianidis" class="csl-entry" role="doc-biblioentry">
+Christianidis, Jean. 1994. <span>“On the History of Indeterminate Problems of the First Degree in <span>G</span>reek Mathematics.”</span> In <em>Trends in the Historiography of Science</em>, edited by Kostas Gavroglu, Jean Christianidis, and Efthymios Nicolaidis, 151:237–47. Boston Studies in the Philosophy of Science. Springer.
+</div>
+<div id="ref-timaeus" class="csl-entry" role="doc-biblioentry">
+Cornford, Francis Macdonald. 1937. <em>Plato’s Cosmology: The <span><em>Timaeus</em></span> of <span>P</span>lato Translated, with a Running Commentary</em>. London: Kegan Paul.
+</div>
+<div id="ref-cornford" class="csl-entry" role="doc-biblioentry">
+———. 1939. <em><span class="nocase">Plato and Parmenides: Parmenides’ <span><em>Way of Truth</em></span> and Plato’s <span><em>Parmenides</em></span>, translated with an introduction and a running commentary</span></em>. London: Kegan Paul.
+</div>
+<div id="ref-anaritius" class="csl-entry" role="doc-biblioentry">
+Curtze, Maximilian, ed. 1899. <em><span class="nocase">Anaritii in decem libros priores Elementorum Euclidis commentarii</span></em>. Leipzig: B. G. Teubner.
+</div>
+<div id="ref-nicomachus" class="csl-entry" role="doc-biblioentry">
+D’Ooge, Martin Luther, Frank Egleston Robbins, and Louis Charles Karpinski. 1926. <em><span class="nocase">Nicomachus of Gerasa: <span><em>Introduction to arithmetic</em></span></span></em>. Vol. XVI. University of Michigan Studies, Humanistic Series. New York: Macmillan.
+</div>
+<div id="ref-hindu" class="csl-entry" role="doc-biblioentry">
+Datta, Bibhutibhushan, and Avadhesh Narayan Singh. 1962. <em>History of <span>H</span>indu Mathematics: A Source Book</em>. Asia Publishing House.
+</div>
+<div id="ref-suanshushu" class="csl-entry" role="doc-biblioentry">
+Dauben, Joseph W. 2008. <span>“Suan Shu Shu: A Book on Numbers and Computations. <span>E</span>nglish Translation with Commentary.”</span> <em>Arch. Hist. Exact Sci.</em> 62 (2): 91–178.
+</div>
+<div id="ref-dicks" class="csl-entry" role="doc-biblioentry">
+Dicks, D. R. 1960. <em>The Geographical Fragments of <span>H</span>ipparchus</em>. University of London, Athlone Press.
+</div>
+<div id="ref-dupuis" class="csl-entry" role="doc-biblioentry">
+Dupuis, J. 1892. <em><span class="nocase">Théon de Smyrne, philosophe platonicien. Exposition des connaissances mathématiques utiles pour la lecture de Platon</span></em>. Paris: Librairie Hachette et Cie.
+</div>
+<div id="ref-einsiedler" class="csl-entry" role="doc-biblioentry">
+Einsiedler, Manfred, and Thomas Ward. 2010. <em>Ergodic Theory: With a View Towards Number Theory</em>. Vol. 259. Graduate Texts in Mathematics. Springer.
+</div>
+<div id="ref-geminus" class="csl-entry" role="doc-biblioentry">
+Evans, James, and J. Lennart Berggren. 2007. <em>Geminos’s <span><em>Introduction to the Phenomena</em></span>: A Translation and Study of a <span>H</span>ellenistic Survey of Astronomy</em>. Princeton University Press.
+</div>
+<div id="ref-festugiereII" class="csl-entry" role="doc-biblioentry">
+Festugière, A. J. 1970. <em><span class="nocase">Proclus: Commentaire sur la République, tome II, dissertations VII–XIV</span></em>. Paris: Librairie philosophique J. Vrin.
+</div>
+<div id="ref-fowler" class="csl-entry" role="doc-biblioentry">
+Fowler, David. 1999. <em>The Mathematics of <span>P</span>lato’s <span>A</span>cademy: A New Reconstruction</em>. Second. Oxford: Clarendon Press.
+</div>
+<div id="ref-gericke" class="csl-entry" role="doc-biblioentry">
+Gericke, Helmuth. 1990. <em><span class="nocase">Mathematik im Abendland. Von den römischen Feldmessern bis zu Descartes</span></em>. Springer.
+</div>
+<div id="ref-goldstein" class="csl-entry" role="doc-biblioentry">
+Goldstein, Bernard R. 1966. <span>“A Note on the <span>M</span>etonic Cycle.”</span> <em>Isis</em> 57 (1): 115–16.
+</div>
+<div id="ref-grant1966" class="csl-entry" role="doc-biblioentry">
+Grant, Edward, ed. 1966. <em><span class="nocase">Nicole Oresme, <span><em>De proportionibus proportionum</em></span> and <span><em>Ad pauca respicientes</em></span></span></em>. University of Wisconsin Publications in Medieval Science 8. University of Wisconsin Press.
+</div>
+<div id="ref-grant1974" class="csl-entry" role="doc-biblioentry">
+———, ed. 1974. <em>A Source Book in Medieval Science</em>. Harvard University Press.
+</div>
+<div id="ref-grattan" class="csl-entry" role="doc-biblioentry">
+Grattan-Guinness, Ivor. 1996. <span>“Numbers, Magnitudes, Ratios, and Proportions in <span>E</span>uclid’s <span><em>Elements</em></span>: How Did He Handle Them?”</span> <em>Historia Math.</em> 23: 355–75.
+</div>
+<div id="ref-aristarchus" class="csl-entry" role="doc-biblioentry">
+Heath, Thomas L. 1913. <em><span class="nocase">Aristarchus of Samos: The Ancient Copernicus</span></em>. Oxford: Clarendon Press.
+</div>
+<div id="ref-aristotle" class="csl-entry" role="doc-biblioentry">
+———. 1949. <em>Mathematics in <span>A</span>ristotle</em>. Oxford: Claredon Press.
+</div>
+<div id="ref-euclidII" class="csl-entry" role="doc-biblioentry">
+———. 1956. <em>The Thirteen Books of <span>E</span>uclid’s <span>E</span>lements, Volume <span>II</span>: <span>B</span>ooks <span>III</span>-<span>IX</span></em>. Second. Dover Publications.
+</div>
+<div id="ref-diophantus" class="csl-entry" role="doc-biblioentry">
+———. 1964. <em>Diophantus of <span>A</span>lexandria: A Study in the History of <span>G</span>reek Algebra</em>. Second. Dover Publications.
+</div>
+<div id="ref-euclidisV" class="csl-entry" role="doc-biblioentry">
+Heiberg, J. L., ed. 1888. <em><span class="nocase">Euclidis Opera omnia, vol. V</span></em>. Lipsiae: B. G. Teubner.
+</div>
+<div id="ref-prosdocimo" class="csl-entry" role="doc-biblioentry">
+Herlinger, Jan. 1987. <em><span class="nocase">Prosdocimo de’ Beldomandi, <span><em>Brevis summula proportionum quantum ad musicam pertinet</em></span> and <span><em>Parvus tractatulus de modo monacordum dividendi</em></span></span></em>. University of Nebraska Press.
+</div>
+<div id="ref-philoponus" class="csl-entry" role="doc-biblioentry">
+Hoche, Richard, ed. 1864. <em><span class="nocase">Iōannu grammatiku Alexandreōs (tu Philoponu) eis to prōton tēs Nikomachu arithmētikēs eisagōgēs</span></em>. Leipzig: B. G. Teubner.
+</div>
+<div id="ref-hogendijk" class="csl-entry" role="doc-biblioentry">
+Hogendijk, Jan P. 2002. <span>“Anthyphairetic Ratio Theory in Medieval <span>I</span>slamic Mathematics.”</span> In <em>From China to Paris: 2000 Years Transmission of Mathematical Ideas</em>, edited by Yvonne Dold-Samplonius, Joseph W. Dauben, Menso Folkerts, and Benno van Dalen, 187–202. Stuttgart: Franz Steiner Verlag.
+</div>
+<div id="ref-philolaus" class="csl-entry" role="doc-biblioentry">
+Huffman, Carl A. 2006. <em>Philolaus of <span>C</span>roton: <span>P</span>ythagorean and <span>P</span>resocratic</em>. Cambridge University Press.
+</div>
+<div id="ref-iosifescu" class="csl-entry" role="doc-biblioentry">
+Iosifescu, Marius, and Cor Kraaikamp. 2002. <em>Metrical Theory of Continued Fractions</em>. Vol. 547. Mathematics and Its Applications. Kluwer Academic Publishers.
+</div>
+<div id="ref-itard" class="csl-entry" role="doc-biblioentry">
+Itard, Jean. 1961. <em>Les Livres Arithmétiques d’<span>E</span>uclide</em>. Vol. X. Histoire de La Pensée. Paris: Hermann.
+</div>
+<div id="ref-pappus7" class="csl-entry" role="doc-biblioentry">
+Jones, Alexander. 1986. <em><span class="nocase">Pappus of Alexandria, Book 7 of the <span><em>Collection</em></span>. Part 1. Introduction, Text and Translation</span></em>. Vol. 8. Sources in the History of Mathematical and Physical Sciences. Springer.
+</div>
+<div id="ref-knorr1982" class="csl-entry" role="doc-biblioentry">
+Knorr, Wilbur Richard. 1982. <span>“Techniques of Fractions in Ancient <span>E</span>gypt and <span>G</span>reece.”</span> <em>Historia Math.</em> 9 (2): 133–71.
+</div>
+<div id="ref-huillier" class="csl-entry" role="doc-biblioentry">
+L’Huillier, Ghislaine. 1990. <em><span class="nocase">Le <span><em>Quadripartitum numerorum</em></span> de Jean de Murs (1343): Introduction et édition critique</span></em>. Vol. 32. Mémoires Et Documents Publiés Par La Société l’école Des Chartes. Librairie Droz.
+</div>
+<div id="ref-larsen" class="csl-entry" role="doc-biblioentry">
+Larsen, Mogens Esrom. 1984. <span>“On the Possibility of a Pre-<span>E</span>uclidean Theory of Proportions.”</span> <em>Centaurus</em> 27 (1): 1–25.
+</div>
+<div id="ref-libbrecht" class="csl-entry" role="doc-biblioentry">
+Libbrecht, Ulrich. 2005. <em>Chinese Mathematics in the Thirteenth Century</em>. Dover Publications.
+</div>
+<div id="ref-ninechapters" class="csl-entry" role="doc-biblioentry">
+Lun, Anthony W.-C., John N. Crossley, and Kangshen Shen. 1999. <em>The Nine Chapters on the Mathematical Art: Companion and Commentary</em>. Oxord University Press.
+</div>
+<div id="ref-mendell" class="csl-entry" role="doc-biblioentry">
+Mendell, Henry. 2007. <span>“Two Traces of Two-Step <span>E</span>udoxan Proportion Theory in <span>A</span>ristotle: A Tale of Definitions in <span>A</span>ristotle, with a Moral.”</span> <em>Arch. Hist. Exact Sci.</em> 61 (1): 3–37.
+</div>
+<div id="ref-proclus" class="csl-entry" role="doc-biblioentry">
+Morrow, Glenn R. 1992. <em><span class="nocase">Proclus: A Commentary on the First Book of Euclid’s <span><em>Elements</em></span></span></em>. Princeton University Press.
+</div>
+<div id="ref-mueller" class="csl-entry" role="doc-biblioentry">
+Mueller, Ian. 2006. <em>Philosophy of Mathematics and Deductive Structure in <span class="nocase">Euclid’s <span><em>Elements</em></span></span></em>. Dover Publications.
+</div>
+<div id="ref-murdoch" class="csl-entry" role="doc-biblioentry">
+Murdoch, John E. 1963. <span>“The Medieval Language of Proportions: Elements of the Interaction with <span>G</span>reek Foundations and the Development of New Mathematical Techniques.”</span> In <em>Scientific Change</em>, edited by A. C. Crombie, 237–71. London: Heinemann.
+</div>
+<div id="ref-netz" class="csl-entry" role="doc-biblioentry">
+Netz, Reviel. 1999. <em>The Shaping of Deduction in <span>G</span>reek Mathematics: A Study in Cognitive History</em>. Vol. 51. Ideas in Context. Cambridge University Press.
+</div>
+<div id="ref-neugebauer" class="csl-entry" role="doc-biblioentry">
+Neugebauer, Otto. 1975. <em>A History of Ancient Mathematical Astronomy</em>. Vol. 1. Studies in the History of Mathematics and Physical Sciences. Springer.
+</div>
+<div id="ref-censorinus" class="csl-entry" role="doc-biblioentry">
+Parker, Holt N. 2007. <em><span>Censorinus, <span><em>The Birthday Book</em></span></span></em>. University of Chicago Press.
+</div>
+<div id="ref-pengelley" class="csl-entry" role="doc-biblioentry">
+Pengelley, David, and Fred Richman. 2006. <span>“Did <span>E</span>uclid Need the <span>E</span>uclidean Algorithm to Prove Unique Factorization?”</span> <em>Amer. Math. Monthly</em> 113 (3): 196–205.
+</div>
+<div id="ref-plooij" class="csl-entry" role="doc-biblioentry">
+Plooij, Edward Bernard. 1950. <em>Euclid’s Conception of Ratio and His Definition of Proportional Magnitudes as Criticized by <span>A</span>rabian Commentators</em>. Rotterdam: W. J. van Hengel.
+</div>
+<div id="ref-domninus" class="csl-entry" role="doc-biblioentry">
+Riedlberger, Peter. 2013. <em>Domninus of <span>L</span>arissa: <span>E</span>nchiridion and Spurious Works</em>. Vol. 2. Mathematica Graeca Antiqua. Fabrizio Serra editore.
+</div>
+<div id="ref-rommevaux" class="csl-entry" role="doc-biblioentry">
+Rommevaux, Sabine. 1999. <span>“<span class="nocase">La proportionnalité numérique dans le livre VII des Éléments de Campanus</span>.”</span> <em>Revue d’histoire Des Mathématiques</em> 5: 83–126.
+</div>
+<div id="ref-metaphysica" class="csl-entry" role="doc-biblioentry">
+Ross, W. D. 1928. <span>“Metaphysica.”</span> In <em>The Works of Aristotle, Volume VIII</em>, edited by W. D. Ross, second. Oxford: Clarendon Press.
+</div>
+<div id="ref-sage" class="csl-entry" role="doc-biblioentry">
+Sage, Michael M. 1996. <em>Warfare in Ancient <span>G</span>reece: A Sourcebook</em>. Routledge.
+</div>
+<div id="ref-saidan" class="csl-entry" role="doc-biblioentry">
+Saidan, A. S. 1974. <span>“The Arithmetic of <span>A</span>bū’l-<span>W</span>afā’.”</span> <em>Isis</em> 65 (3): 367–74.
+</div>
+<div id="ref-sigler" class="csl-entry" role="doc-biblioentry">
+Sigler, L. E. 1987. <em><span class="nocase">Leonardo Pisano Fibonacci, The Book of Squares</span></em>. Academic Press.
+</div>
+<div id="ref-theinred" class="csl-entry" role="doc-biblioentry">
+Snyder, John L. 2006. <em><span class="nocase">Theinred of Dover’s <span><em>De legitimis ordinibus pentachordorum et tetrachordorum</em></span>: a critical text and translation with an introduction, annotations, and indices</span></em>. Vol. 18. Musical Theorists in Translation. Ottawa: Institute of Medieval Music.
+</div>
+<div id="ref-martianusII" class="csl-entry" role="doc-biblioentry">
+Stahl, William Harris, Richard Johnson, and E. L. Burge. 1977. <em><span class="nocase">Martianus Capella and the Seven Liberal Arts, volume II. The Marriage of Philology and Mercury</span></em>. Records of Civilization: Sources and Studies 84. Columbia University Press.
+</div>
+<div id="ref-szabo" class="csl-entry" role="doc-biblioentry">
+Szabó, Árpád. 1978. <em>The Beginnings of <span>G</span>reek Mathematics</em>. Vol. 17. Sythese Historical Library. Dordrecht: D. Reidel Publishing Company.
+</div>
+<div id="ref-taisbak" class="csl-entry" role="doc-biblioentry">
+Taisbak, Christian Marinus. 1971. <em>Division and Logos: A Theory of Equivalent Couples and Sets of Integers, Propounded by <span>E</span>uclid in the Arithmetical Books of the <span>E</span>lements</em>. Vol. 25. Acta Historica Scientiarum Naturalium Et Medicinalium. Odense University Press.
+</div>
+<div id="ref-quadrangles" class="csl-entry" role="doc-biblioentry">
+———. 1982. <em><span class="nocase">Coloured Quadrangles. A Guide to the Tenth Book of <span>E</span>uclid’s <span>E</span>lements</span></em>. Vol. 24. Opuscula Graecolatina. Copenhagen: Museum Tusculanum Press.
+</div>
+<div id="ref-taran" class="csl-entry" role="doc-biblioentry">
+Tarán, Leonardo. 1969. <span>“<span class="nocase">Asclepius of Tralles: Commentary to Nicomachus’ Introduction to Arithmetic</span>.”</span> <em>Transactions of the American Philosophical Society</em> 59 (4): 1–89.
+</div>
+<div id="ref-LCL335" class="csl-entry" role="doc-biblioentry">
+Thomas, Ivor, ed. 1991. <em>Greek Mathematics, Volume <span>I</span></em>. Loeb Classical Library 362. Harvard University Press.
+</div>
+<div id="ref-pappusX" class="csl-entry" role="doc-biblioentry">
+Thomson, William, and Gustav Junge. 1930. <em><span class="nocase">The Commentary of Pappus on Book X of Euclid’s Elements</span></em>. Vol. VIII. Harvard Semitic Series. Harvard University Press.
+</div>
+<div id="ref-thorup" class="csl-entry" role="doc-biblioentry">
+Thorup, Anders. 1992. <span>“A Pre-<span>E</span>uclidean Theory of Proportions.”</span> <em>Arch. Hist. Exact Sci.</em> 45 (1): 1–16.
+</div>
+<div id="ref-almagest" class="csl-entry" role="doc-biblioentry">
+Toomer, G. J. 1984. <em><span class="nocase">Ptolemy’s <span><em>Almagest</em></span></span></em>. Duckworth.
+</div>
+<div id="ref-iamblichus" class="csl-entry" role="doc-biblioentry">
+Vinel, Nicolas. 2014. <em><span class="nocase">Jamblique, In Nicomachi Arithmeticam. Introduction, texte critique, traduction fran<span class="nocase">ç</span>aise et notes de commentaires</span></em>. Vol. 3. Mathematica Graeca Antiqua. Fabrizio Serra editore.
+</div>
+<div id="ref-vitrac2" class="csl-entry" role="doc-biblioentry">
+Vitrac, Bernard. 1994. <em><span class="nocase">Euclide d’Alexandrie. Les Éléments. Volume 2: Livres V–IX</span></em>. Bibliothèque d’histoire Des Sciences. Paris: Presses Universitaires de France.
+</div>
+<div id="ref-weil" class="csl-entry" role="doc-biblioentry">
+Weil, André. 1984. <em>Number Theory: An Approach Through History from <span>H</span>ammurapi to <span>L</span>egendre</em>. Birkh<span>ä</span>user.
+</div>
+<div id="ref-aelian" class="csl-entry" role="doc-biblioentry">
+Wilson, N. G. 1997. <em><span>Aelian: <span><em>Historical Miscellany</em></span></span></em>. Loeb Classical Library 486. Harvard University Press.
+</div>
+<div id="ref-zeeman" class="csl-entry" role="doc-biblioentry">
+Zeeman, E. C. 1986. <span>“Gears from the <span>G</span>reeks.”</span> <em>Proceedings of the Royal Institution of Great Britain</em> 58: 137–56.
+</div>
+</div>
+</body>
+</html>
