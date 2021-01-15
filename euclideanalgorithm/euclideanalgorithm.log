@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2020.12.28)  12 JAN 2021 20:15
+This is XeTeX, Version 3.14159265-2.6-0.999992 (TeX Live 2020/W32TeX) (preloaded format=xelatex 2020.12.28)  12 JAN 2021 20:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -321,36 +321,36 @@ File: l3backend-xetex.def 2020-09-24 L3 backend support: XeTeX
 (./euclideanalgorithm.aux)
 \openout1 = `euclideanalgorithm.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
-LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 2
-2.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 1
+7.
  (c:/texlive/2020/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 22.
+Package hyperref Info: Link coloring OFF on input line 17.
  (c:/texlive/2020/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -362,27 +362,27 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count286
 )
-LaTeX Info: Redefining \ref on input line 22.
-LaTeX Info: Redefining \pageref on input line 22.
-LaTeX Info: Redefining \nameref on input line 22.
+LaTeX Info: Redefining \ref on input line 17.
+LaTeX Info: Redefining \pageref on input line 17.
+LaTeX Info: Redefining \nameref on input line 17.
 
 (./euclideanalgorithm.out) (./euclideanalgorithm.out)
 \@outlinefile=\write3
 \openout3 = `euclideanalgorithm.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 23.
 
 
 (c:/texlive/2020/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 23.
 
 
 (c:/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 28
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 23
 .
 
 (c:/texlive/2020/texmf-dist/tex/latex/jknapltx/ursfs.fd
@@ -395,13 +395,13 @@ File: se-ascii-print.def 2019/11/29 v1.12 stringenc: Printable ASCII characters
 
 ]
 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
-Overfull \hbox (6.124pt too wide) in paragraph at lines 797--798
+Overfull \hbox (6.124pt too wide) in paragraph at lines 792--793
 []\TU/lmr/m/n/10 Proclus 381–382 [[], pp. 300–301], on \TU/lmr/m/it/10 Elements
  \TU/lmr/m/n/10 I.32 (Proclus refers to \TU/lmr/m/it/10 Timaeus
  []
 
 [13] [14]
-Overfull \hbox (0.17114pt too wide) detected at line 944
+Overfull \hbox (0.17114pt too wide) detected at line 939
 \OML/cmm/m/it/10 A \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 p \OMS/cmsy/m/n/10 ^^A []
 \OT1/cmr/m/n/10 (\OML/cmm/m/it/10 A; B\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ;  B \O
 T1/cmr/m/n/10 = \OML/cmm/m/it/10 q \OMS/cmsy/m/n/10 ^^A []\OT1/cmr/m/n/10 (\OML
@@ -413,25 +413,25 @@ sy/m/n/10 ^^A []\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 C; D\OT1/cmr/m/n/10 )\OML/cmm
  []
 
 [15] [16] [17] [18] [19] [20]
-Overfull \hbox (6.13892pt too wide) in paragraph at lines 1234--1237
+Overfull \hbox (6.13892pt too wide) in paragraph at lines 1229--1232
 []\TU/lmr/m/n/10 I have taken the arc from the northernmost limit to the most s
 outherly,
  []
 
 [21] [22] [23] [24] [25] [26]
-Overfull \hbox (17.37201pt too wide) in paragraph at lines 1493--1498
+Overfull \hbox (17.37201pt too wide) in paragraph at lines 1488--1493
 \TU/lmr/m/n/10 number is multiple-superpartient, while the lesser number is sub
 multiple-
  []
 
 [27] [28] [29]
-Overfull \hbox (4.45003pt too wide) in paragraph at lines 1648--1651
+Overfull \hbox (4.45003pt too wide) in paragraph at lines 1643--1646
 []\TU/lmr/m/n/10 Propositis duobus numeris ad invicem compositis maximum numeru
 m
  []
 
 
-Overfull \hbox (1.472pt too wide) in paragraph at lines 1672--1674
+Overfull \hbox (1.472pt too wide) in paragraph at lines 1667--1669
 \TU/lmr/m/n/10 detrahatur, aut relinquetur unitas aut numerus ad detractum prim
 us. 
  []
@@ -447,10 +447,10 @@ Package rerunfilecheck Info: File `euclideanalgorithm.out' has not changed.
 (rerunfilecheck)             Checksum: 828F352CA227E0BED56B91D9DC35830B;931.
  ) 
 Here is how much of TeX's memory you used:
- 11203 strings out of 477298
- 165801 string characters out of 5836089
- 472007 words of memory out of 5000000
- 30687 multiletter control sequences out of 15000+600000
+ 11198 strings out of 477298
+ 165781 string characters out of 5836089
+ 471951 words of memory out of 5000000
+ 30682 multiletter control sequences out of 15000+600000
  411203 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  68i,16n,76p,947b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
